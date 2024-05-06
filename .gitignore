@@ -1,0 +1,15 @@
+build
+.build
+dist
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Editor
+.vscode
+.vscode-test
+.idea

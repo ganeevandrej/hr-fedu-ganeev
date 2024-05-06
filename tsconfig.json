@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es2020",
+    "lib": [
+      "dom",
+      "es2020"
+    ],
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": true,
+    "jsx": "react-jsx",
+    "paths": {
+        "@api/*": ["src/api/*"],
+        "@store/*": ["src/store/*"],
+        "@utils/*": ["src/shared/utils/*"],
+        "@common/*": ["src/shared/common/*"],
+        "@business/*": ["src/shared/business/*"],
+        "@pages/*": ["src/pages/*"],
+        "@harness/*": ["src/harness/*"],
+        "@styles/*": ["src/styles/*"],
+        "@assets/*": ["src/assets/*"],
+        "@models/*": ["src/models/*"],
+      },
+  },
+  "ts-node":{
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": ["node_modules"]
+}
