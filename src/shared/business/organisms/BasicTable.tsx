@@ -55,10 +55,6 @@ type Props<T, S> = {
 const BasicTable = <T, S>({ columns, data, navigateToCard }: Props<T, S>) => {
 	const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel() });
 
-	if (!data || !data?.length) {
-		return <DataNotFoundBox title="Список заявок пуст. Приходите позже" />;
-	}
-
 	return (
 		<Box>
 			<Table>
@@ -74,20 +70,28 @@ const BasicTable = <T, S>({ columns, data, navigateToCard }: Props<T, S>) => {
 					</thead>
 				))}
 				<tbody>
-					{table.getRowModel().rows.map((row) => (
-						<TableRow key={row.id} onDoubleClick={() => navigateToCard && navigateToCard(row)}>
-							{row.getVisibleCells().map((cell) => (
-								<TableCell
-									key={cell.id}
-									style={{
-										width: cell.column.getSize(),
-									}}
-								>
-									{flexRender(cell.column.columnDef.cell, cell.getContext())}
-								</TableCell>
-							))}
+					{!data || !data?.length ? (
+						<TableRow style={{ height: '60vh' }}>
+							<TableCell colSpan={6} style={{ padding: '10px 0 0 0' }}>
+								<DataNotFoundBox title="Список заявок пуст. Приходите позже" />
+							</TableCell>
 						</TableRow>
-					))}
+					) : (
+						table.getRowModel().rows.map((row) => (
+							<TableRow key={row.id} onDoubleClick={() => navigateToCard && navigateToCard(row)}>
+								{row.getVisibleCells().map((cell) => (
+									<TableCell
+										key={cell.id}
+										style={{
+											width: cell.column.getSize(),
+										}}
+									>
+										{flexRender(cell.column.columnDef.cell, cell.getContext())}
+									</TableCell>
+								))}
+							</TableRow>
+						))
+					)}
 				</tbody>
 			</Table>
 		</Box>

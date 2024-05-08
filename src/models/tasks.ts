@@ -1,44 +1,34 @@
-type TasksStatuses = 'rejected' | 'unassigned';
+type TasksStatuses = 'rejected' | 'unassigned' | 'completed' | 'assigned' | 'archive' | 'late';
 
 type ClientTypes = 'standard' | 'premium';
 
-type AdminTasksPreviewDto = AdminTaskPreviewDto[];
-
-type AdminTaskPreviewDto = {
+type Task = {
 	id: string;
 	createdDate: string;
-	status: TasksStatuses;
-	workType: string;
-	preferablePrice?: number;
-};
-
-type ExecutorTasksPreviewDto = ExecutorTaskPreviewDto[];
-
-type ExecutorTaskPreviewDto = {
-	id: string;
-	deadlineDate: string;
-	clientType: ClientTypes;
-	workType: string;
-	preferablePrice?: number;
-};
-
-type ExecutorTaskModel = {
-	id: string;
-	deadlineDate: string;
-	clientType: ClientTypes;
-	workType: string;
-	preferablePrice?: number;
-	isExpiring: boolean;
-};
-
-type AdminTaskDto = {
-	id: string;
-	createdDate: string;
-	preferablePrice?: number;
+	preferablePrice: number;
 	codeOSU: string;
 	clientFullName: string;
 	phoneNumber: string;
 	workType: string;
+};
+
+type AdminTasksPreviewDto = AdminTaskPreviewDto[];
+
+type AdminTaskPreviewDto = Pick<AdminTaskDto, 'id' | 'createdDate' | 'workType' | 'preferablePrice'> & {
+	status: TasksStatuses;
+};
+
+type ExecutorTasksPreviewDto = ExecutorTaskPreviewDto[];
+
+type ExecutorTaskPreviewDto = Pick<ExecutorTaskDto, 'id' | 'deadlineDate' | 'workType' | 'preferablePrice'> & {
+	clientType: ClientTypes;
+};
+
+type ExecutorTaskModel = ExecutorTaskPreviewDto & {
+	isExpiring: boolean;
+};
+
+type AdminTaskDto = Task & {
 	clientType: string;
 	rejectReason?: string;
 	comment?: string;
@@ -48,20 +38,13 @@ type AssignTaskRequestDto = {
 	userFullName: string;
 	minimalPrice: number;
 	deadlineDate: string;
-	recommendedPrice?: number;
+	recommendedPrice: number;
 };
 
-type ExecutorTaskDto = {
-	id: string;
-	createdDate: string;
+type ExecutorTaskDto = Task & {
 	deadlineDate: string;
-	preferablePrice?: number;
-	recommendedPrice?: number;
+	recommendedPrice: number;
 	minimalPrice: number;
-	phoneNumber: string;
-	workType: string;
-	codeOSU: string;
-	clientFullName: string;
 };
 
 type CompleteTaskRequestModel = {
@@ -83,44 +66,6 @@ type TasksMutationRequestModel = {
 	body: AssignTaskRequestDto;
 };
 
-const isAdminTaskArray = (data: AdminTasksPreviewDto | ExecutorTasksPreviewDto): data is AdminTasksPreviewDto => {
-	return (
-		Array.isArray(data) &&
-		data.some(
-			(task) =>
-				typeof task === 'object' &&
-				task !== null &&
-				'id' in task &&
-				'createdDate' in task &&
-				'status' in task &&
-				'workType' in task &&
-				'preferablePrice' in task,
-		)
-	);
-};
-
-const isAdminTask = (taskData: TaskDto): taskData is AdminTaskDto =>
-	(taskData as AdminTaskDto).clientType !== undefined;
-
-const isExecutorTaskArray = (data: AdminTasksPreviewDto | ExecutorTasksPreviewDto): data is ExecutorTasksPreviewDto => {
-	return (
-		Array.isArray(data) &&
-		data.some(
-			(task) =>
-				typeof task === 'object' &&
-				task !== null &&
-				'id' in task &&
-				'deadlineDate' in task &&
-				'clientType' in task &&
-				'workType' in task &&
-				'preferablePrice' in task,
-		)
-	);
-};
-
-const isExecutorTask = (taskData: TaskDto): taskData is ExecutorTaskDto =>
-	(taskData as ExecutorTaskDto).deadlineDate !== undefined;
-
 export type {
 	TasksStatuses,
 	ClientTypes,
@@ -137,5 +82,3 @@ export type {
 	TaskRequestQuery,
 	TasksMutationRequestModel,
 };
-
-export { isAdminTask, isAdminTaskArray, isExecutorTask, isExecutorTaskArray };
