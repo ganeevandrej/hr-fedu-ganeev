@@ -1,13 +1,13 @@
 import React from 'react';
 import BasicTable from '@business/organisms/BasicTable';
-import LoaderBox from '@common/atoms/LoaderBox';
 import useNavigateToCard from '@common/hooks/navigateToCard';
-import { AdminTaskPreviewDto, ExecutorTaskPreviewDto, isAdminTaskArray, TasksStatuses } from '@models/tasks';
+import { AdminTaskPreviewDto, ExecutorTaskPreviewDto, TasksStatuses } from '@models/tasks';
 import { Box as MuiBox, styled, Typography as MuiTypography } from '@mui/material';
 import { ColumnDef } from '@tanstack/table-core';
-import adminTasksTableColumns from './adminTasksTableColumns';
+import { isAdminTaskArray } from './typeGuards/adminTypeGuards';
+import getAdminTasksTableColumns from './adminTasksTableColumns';
 import mapExecutorTasksFromDto from './executorTasksMapper';
-import executorTasksTableColumns from './executorTasksTableColumns';
+import getExecutorTasksTableColumns from './executorTasksTableColumns';
 
 const Box = styled(MuiBox)(({ theme }) => ({
 	display: 'flex',
@@ -31,28 +31,25 @@ const Tasks = () => {
 
 	/* eslint-disable @typescript-eslint/no-explicit-any */
 	const data: any = [];
-	const isLoading = false;
 
 	const tasksTable = isAdminTaskArray(data) ? (
-		<BasicTable data={data} columns={adminTasksTableColumns as AdminTasksColumnsType} navigateToCard={navigateToCard} />
+		<BasicTable
+			data={data}
+			columns={getAdminTasksTableColumns() as AdminTasksColumnsType}
+			navigateToCard={navigateToCard}
+		/>
 	) : (
 		<BasicTable
 			data={mapExecutorTasksFromDto(data)}
-			columns={executorTasksTableColumns as ExecutorTasksColumnsType}
+			columns={getExecutorTasksTableColumns() as ExecutorTasksColumnsType}
 			navigateToCard={navigateToCard}
 		/>
 	);
 
 	return (
 		<Box>
-			{isLoading ? (
-				<LoaderBox />
-			) : (
-				<>
-					<Typography variant="h1">Заявки</Typography>
-					{tasksTable}
-				</>
-			)}
+			<Typography variant="h1">Заявки</Typography>
+			{tasksTable}
 		</Box>
 	);
 };

@@ -1,6 +1,6 @@
 declare module '@mui/material/styles' {
 	interface Palette {
-		status: Record<import('./models/tasks').TasksStatuses, string>;
+		status: Partial<Record<import('./models/tasks').TasksStatuses, string>>;
 		appHeader: string;
 		button: { delete: string };
 		type: {
@@ -10,7 +10,7 @@ declare module '@mui/material/styles' {
 		};
 	}
 	interface PaletteOptions {
-		status: Record<import('./models/tasks').TasksStatuses, string>;
+		status: Partial<Record<import('./models/tasks').TasksStatuses, string>>;
 		appHeader: string;
 		button: { delete: string };
 		type: {

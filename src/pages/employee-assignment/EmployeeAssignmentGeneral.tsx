@@ -1,12 +1,16 @@
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import AmountInput from '@common/atoms/inputs/AmountInput';
 import MaskedInput from '@common/atoms/inputs/MaskedInput';
 import TextInput from '@common/atoms/inputs/TextInput';
 import CardTemplate from '@common/molecules/CardTemplate';
-import { isAdminTask, TaskDto } from '@models/tasks';
+import { TaskDto } from '@models/tasks';
 import { Checkbox as MuiCheckbox, checkboxClasses, FormControlLabel, Grid, styled } from '@mui/material';
+import { isAdminTask } from '@pages/tasks/typeGuards/adminTypeGuards';
+import { RootState } from '@store/store';
+import { getDictionaryValueByCode } from '@utils/dictionary/dictionaryParsing';
 import { EmployeeAssignmentRequestModel, getDefaultValues } from './employeeAssignmentFormSettings';
 
 const Checkbox = styled(MuiCheckbox)(({ theme }) => ({
@@ -25,6 +29,7 @@ type Props<T> = {
 
 const EmployeeAssignmentGeneral = <T extends TaskDto>({ taskData }: Props<T>) => {
 	const navigate = useNavigate();
+	const workTypes = useSelector((state: RootState) => state.dictionaries.workTypes);
 	const adminTaskData = taskData && isAdminTask(taskData) ? taskData : undefined;
 
 	const { reset } = useFormContext<EmployeeAssignmentRequestModel>();
@@ -46,7 +51,11 @@ const EmployeeAssignmentGeneral = <T extends TaskDto>({ taskData }: Props<T>) =>
 					<TextInput readOnly label="Дата создания заявки" value={adminTaskData?.createdDate.slice(0, 10) || '--'} />
 				</Grid>
 				<Grid item xs={3}>
-					<TextInput readOnly label="Вид работ" value={adminTaskData?.workType || '--'} />
+					<TextInput
+						readOnly
+						label="Вид работ"
+						value={getDictionaryValueByCode(workTypes, adminTaskData?.workType || '') || '--'}
+					/>
 				</Grid>
 				<Grid item xs={3}>
 					<AmountInput

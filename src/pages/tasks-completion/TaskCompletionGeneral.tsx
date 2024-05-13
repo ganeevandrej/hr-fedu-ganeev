@@ -4,8 +4,9 @@ import AmountInput from '@common/atoms/inputs/AmountInput';
 import DateInput from '@common/atoms/inputs/DateInput';
 import TextInput from '@common/atoms/inputs/TextInput';
 import CardTemplate from '@common/molecules/CardTemplate';
-import { CompleteTaskRequestModel, isExecutorTask, TaskDto } from '@models/tasks';
+import { CompleteTaskRequestModel, TaskDto } from '@models/tasks';
 import { Grid } from '@mui/material';
+import { isExecutorTask } from '@pages/tasks/typeGuards/executorTypeGuards';
 import { defaultValues } from './taskCompletionFormSettings';
 
 type Props<T> = {

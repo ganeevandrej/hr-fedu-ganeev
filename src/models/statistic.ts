@@ -1,7 +1,9 @@
+import { TasksStatuses } from './tasks';
+
 type StatisticDto = {
-	name: string;
+	name: TasksStatuses;
 	value: number;
-	color: string;
+	color?: string;
 };
 
 export type { StatisticDto };

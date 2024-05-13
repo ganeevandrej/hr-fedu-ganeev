@@ -12,7 +12,7 @@ const Box = styled(MuiBox)(({ theme }) => ({
 	color: theme.palette.common.white,
 }));
 
-type ColorsMap = Map<TasksStatuses, string>;
+type ColorsMap = Map<TasksStatuses, string | undefined>;
 
 type Props = {
 	status: TasksStatuses;
