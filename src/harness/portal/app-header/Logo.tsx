@@ -10,7 +10,9 @@ const Box = styled(MuiBox)({
 const Typography = styled(MuiTypography)(({ theme }) => ({
 	color: theme.palette.common.white,
 	fontWeight: theme.typography.fontWeightBold,
-	minWidth: 250,
+	maxWidth: 250,
+	paddingRight: 8,
+	borderRight: '1px solid #ffffff',
 	[theme.breakpoints.down('sm')]: {
 		display: 'none',
 	},

@@ -54,7 +54,7 @@ const theme = createTheme({
 			premium: '#B8BCE2',
 			expiring: alpha('#FF0000', 0.4),
 		},
-		appHeader: '#3A9EC9',
+		appHeader: '#BDC0E4',
 		button: {
 			delete: '#B8BCE2',
 		},
@@ -98,6 +98,18 @@ const theme = createTheme({
 					height: 46,
 					minHeight: 46,
 					paddingLeft: 14,
+				},
+			},
+		},
+		MuiButton: {
+			styleOverrides: {
+				containedSecondary: {
+					color: '#F1F3F8',
+					backgroundColor: '#BDC0E4',
+				},
+				outlinedSecondary: {
+					color: '#A0A5D8',
+					border: '1px solid #A0A5D8',
 				},
 			},
 		},
