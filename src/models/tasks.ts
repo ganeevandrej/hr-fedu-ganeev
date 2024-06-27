@@ -28,6 +28,13 @@ type ExecutorTaskModel = ExecutorTaskPreviewDto & {
 	isExpiring: boolean;
 };
 
+type TasksRequestDto = {
+	startDate?: Date;
+	endDate?: Date;
+	priceFrom?: number;
+	priceTo?: number;
+};
+
 type AdminTaskDto = Task & {
 	clientType: string;
 	rejectReason?: string;
@@ -57,6 +64,8 @@ type ExecutorTaskDto = Task & {
 
 type TaskDto = ExecutorTaskDto | AdminTaskDto;
 
+type TasksPreviewDto = ExecutorTasksPreviewDto | AdminTasksPreviewDto;
+
 type TaskRequestQuery = {
 	id: string;
 	role: 'admin' | 'executor';
@@ -79,6 +88,8 @@ export type {
 	AdminTaskDto,
 	ExecutorTaskDto,
 	TaskDto,
+	TasksRequestDto,
+	TasksPreviewDto,
 	AssignTaskRequestDto,
 	TaskRequestQuery,
 	TasksMutationRequestModel,

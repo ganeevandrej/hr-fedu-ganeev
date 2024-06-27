@@ -1,20 +1,19 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import ClientTypeTypography from '@business/atoms/ClientTypeTypography';
 import DeleteButton from '@common/atoms/DeleteButton';
-import { ExecutorTaskModel } from '@models/tasks';
+import { Dictionary } from '@models/dictionaries';
+import { ClientTypes, ExecutorTaskModel } from '@models/tasks';
 import { Box, Typography } from '@mui/material';
-import { RootState } from '@store/store';
-import { createColumnHelper } from '@tanstack/table-core';
+import { ColumnDef, createColumnHelper } from '@tanstack/table-core';
 import { formatDate } from '@utils/date/dateFormatting';
 import { getDictionaryValueByCode } from '@utils/dictionary/dictionaryParsing';
 import { trimString } from '@utils/string/stringFormatting';
 
+type ExecutorTasksColumnsType = ColumnDef<ExecutorTaskModel, ClientTypes>[];
+
 const columnHelper = createColumnHelper<ExecutorTaskModel>();
 
-const getExecutorTasksTableColumns = () => {
-	const workTypes = useSelector((state: RootState) => state.dictionaries.workTypes);
-
+const getExecutorTasksTableColumns = (workTypes: Dictionary[]): ExecutorTasksColumnsType => {
 	return [
 		columnHelper.accessor('id', {
 			size: 100,
@@ -29,12 +28,13 @@ const getExecutorTasksTableColumns = () => {
 				return <ClientTypeTypography type={info.getValue()} isExpiring={isExpiring} />;
 			},
 		}),
-		columnHelper.accessor('preferablePrice', {
+		columnHelper.accessor((data) => String(data.preferablePrice), {
+			id: 'preferablePrice',
 			size: 200,
 			header: () => <Typography variant="tableHeader">Желаемая стоимость работ, руб.</Typography>,
 			cell: (info) => {
 				const price = info.getValue();
-				const displayPrice = price ? price.toFixed(2).replace('.', ',') : '';
+				const displayPrice = price ? Number(price).toFixed(2).replace('.', ',') : '';
 				return <Typography>{displayPrice}</Typography>;
 			},
 		}),
@@ -55,7 +55,8 @@ const getExecutorTasksTableColumns = () => {
 				<Typography noWrap>{trimString(getDictionaryValueByCode(workTypes, info.getValue()), 35)}</Typography>
 			),
 		}),
-		columnHelper.accessor('isExpiring', {
+		columnHelper.accessor((data) => String(data.isExpiring), {
+			id: 'isExpiring',
 			size: 150,
 			header: '',
 			cell: () => (
