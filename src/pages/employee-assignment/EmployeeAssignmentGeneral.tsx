@@ -10,6 +10,7 @@ import { TaskDto } from '@models/tasks';
 import { Checkbox as MuiCheckbox, checkboxClasses, FormControlLabel, Grid, styled } from '@mui/material';
 import { isAdminTask } from '@pages/tasks/typeGuards/adminTypeGuards';
 import { RootState } from '@store/store';
+import { formatDate } from '@utils/date/dateFormatting';
 import { getDictionaryValueByCode } from '@utils/dictionary/dictionaryParsing';
 import { EmployeeAssignmentRequestModel, getDefaultValues } from './employeeAssignmentFormSettings';
 
@@ -41,6 +42,8 @@ const EmployeeAssignmentGeneral = <T extends TaskDto>({ taskData }: Props<T>) =>
 		}
 	}, [adminTaskData, reset, navigate]);
 
+	const formattedDate = formatDate(new Date(adminTaskData?.createdDate ?? ''));
+
 	return (
 		<CardTemplate title="Общая информация">
 			<Grid container rowGap={8}>
@@ -48,7 +51,7 @@ const EmployeeAssignmentGeneral = <T extends TaskDto>({ taskData }: Props<T>) =>
 					<TextInput readOnly label="ФИО клиента" value={adminTaskData?.clientFullName || '--'} />
 				</Grid>
 				<Grid item xs={3}>
-					<TextInput readOnly label="Дата создания заявки" value={adminTaskData?.createdDate.slice(0, 10) || '--'} />
+					<TextInput readOnly label="Дата создания заявки" value={formattedDate || '--'} />
 				</Grid>
 				<Grid item xs={3}>
 					<TextInput
