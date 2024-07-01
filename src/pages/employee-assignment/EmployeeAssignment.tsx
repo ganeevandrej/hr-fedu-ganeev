@@ -2,6 +2,7 @@ import React from 'react';
 import { FormProvider, Resolver, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
 import { useGetTaskByIdQuery, useTasksAssignMutation } from '@api/tasks/taskApi';
+import { BreadcrumbItem } from '@common/atoms/BreadCrumbs';
 import LoaderBox from '@common/atoms/LoaderBox';
 import PageTemplate from '@common/molecules/PageTemplate';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -11,6 +12,8 @@ import EmployeeAssignmentForm from './EmployeeAssignmentForm';
 import { EmployeeAssignmentRequestModel, useEmployeeAssignmentSchema } from './employeeAssignmentFormSettings';
 import EmployeeAssignmentGeneral from './EmployeeAssignmentGeneral';
 import { mapToDto } from './employeeAssignmentMapper';
+
+const breadcrumbsData: BreadcrumbItem[] = [{ label: 'Заявки', to: '/tasks' }];
 
 const EmployeeAssignment = () => {
 	const params = useParams();
@@ -43,6 +46,7 @@ const EmployeeAssignment = () => {
 	) : (
 		<PageTemplate
 			title={`Заявка ${params.id || ''}`}
+			breadcrumbsData={breadcrumbsData}
 			isFormDirty={formContext.formState.isDirty}
 			submitFormName="employee-assignment-card"
 			submitButtonLabel="Назначить"
