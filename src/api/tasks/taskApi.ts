@@ -23,6 +23,13 @@ const taskApi = rtkQueryApi.injectEndpoints({
 				body: body,
 			}),
 		}),
+		tasksComplete: build.mutation<void, TasksMutationRequestModel>({
+			query: ({ id, body }) => ({
+				url: `/v1/tasks/${id}/complete`,
+				method: 'POST',
+				body: body,
+			}),
+		}),
 		tasksArchive: build.mutation<void, TasksMutationRequestModel>({
 			query: ({ id, body }) => ({
 				url: `/v1/tasks/${id}/archive`,
@@ -33,4 +40,10 @@ const taskApi = rtkQueryApi.injectEndpoints({
 	}),
 });
 
-export const { useGetTaskByIdQuery, useTasksAssignMutation, useTasksReturnMutation, useTasksArchiveMutation } = taskApi;
+export const {
+	useGetTaskByIdQuery,
+	useTasksAssignMutation,
+	useTasksReturnMutation,
+	useTasksCompleteMutation,
+	useTasksArchiveMutation,
+} = taskApi;
