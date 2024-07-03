@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router';
+import ErrorBoundary from '@business/molecules/ErrorBoundary';
 import AppHeader from '@harness/portal/app-header/AppHeader';
 import { Box, CssBaseline, styled } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
@@ -16,10 +17,12 @@ const Harness = () => {
 	return (
 		<ThemeProvider theme={theme}>
 			<CssBaseline />
-			<AppHeader />
-			<Workspace>
-				<Outlet />
-			</Workspace>
+			<ErrorBoundary>
+				<AppHeader />
+				<Workspace>
+					<Outlet />
+				</Workspace>
+			</ErrorBoundary>
 		</ThemeProvider>
 	);
 };
