@@ -2,10 +2,10 @@ import React from 'react';
 import { FormProvider, Resolver, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
 import { useGetTaskByIdQuery, useTasksAssignMutation } from '@api/tasks/taskApi';
-import { BreadcrumbItem } from '@common/atoms/BreadCrumbs';
 import LoaderBox from '@common/atoms/LoaderBox';
 import PageTemplate from '@common/molecules/PageTemplate';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
+import { Breadcrumb } from '@models/breadCrunbs';
 import { Grid } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query';
 import EmployeeAssignmentForm from './EmployeeAssignmentForm';
@@ -13,7 +13,7 @@ import { EmployeeAssignmentRequestModel, useEmployeeAssignmentSchema } from './e
 import EmployeeAssignmentGeneral from './EmployeeAssignmentGeneral';
 import { mapToDto } from './employeeAssignmentMapper';
 
-const breadcrumbsData: BreadcrumbItem[] = [{ label: 'Заявки', to: '/tasks' }];
+const breadcrumbsData: Breadcrumb[] = [{ label: 'Заявки', to: '/tasks' }];
 
 const EmployeeAssignment = () => {
 	const params = useParams();

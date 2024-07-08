@@ -1,14 +1,10 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { Breadcrumb } from '@models/breadCrunbs';
 import { Breadcrumbs as MuiBreadcrumbs, Link, styled, Typography } from '@mui/material';
 
-export interface BreadcrumbItem {
-	label: string;
-	to?: string;
-}
-
 interface Props {
-	items: BreadcrumbItem[];
+	items: Breadcrumb[];
 	title: string;
 }
 

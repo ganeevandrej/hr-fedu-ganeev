@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useSelector } from 'react-redux';
 import AmountInput from '@common/atoms/inputs/AmountInput';
 import DateInput from '@common/atoms/inputs/DateInput';
 import MaskedInput from '@common/atoms/inputs/MaskedInput';
 import TextInput from '@common/atoms/inputs/TextInput';
 import CardTemplate from '@common/molecules/CardTemplate';
-import { CompleteTaskRequestModel, TaskDto } from '@models/tasks';
+import { TaskDto } from '@models/tasks';
 import { Grid } from '@mui/material';
 import { isExecutorTask } from '@pages/tasks/typeGuards/executorTypeGuards';
-import { RootState } from '@store/store';
+import useAppSelector from '@store/hooks/useAppSelector';
 import { getDictionaryValueByCode } from '@utils/dictionary/dictionaryParsing';
-import { defaultValues } from './taskCompletionFormSettings';
+import { CompleteTaskRequestModel, getDefaultValues } from './taskCompletionFormSettings';
 
 type Props<T> = {
 	taskData: T;
@@ -19,13 +18,13 @@ type Props<T> = {
 
 const TaskCompletionGeneral = <T extends TaskDto>({ taskData }: Props<T>) => {
 	const executorTaskData = taskData && isExecutorTask(taskData) ? taskData : undefined;
-	const workTypes = useSelector((state: RootState) => state.dictionaries.workTypes);
+	const workTypes = useAppSelector((state) => state.dictionaries.workTypes);
 
 	const { reset } = useFormContext<CompleteTaskRequestModel>();
 
 	useEffect(() => {
 		if (executorTaskData) {
-			reset(defaultValues);
+			reset(getDefaultValues(executorTaskData));
 		}
 	}, [executorTaskData, reset]);
 

@@ -41,17 +41,18 @@ type AssignTaskRequestDto = {
 	recommendedPrice: number;
 };
 
+type CompleteTaskRequestDto = {
+	workType: string;
+	workPrice: number;
+	completeDate: string;
+	comment?: string;
+};
+
 type ExecutorTaskDto = Task & {
 	deadlineDate: string;
 	recommendedPrice: number;
 	minimalPrice: number;
-};
-
-type CompleteTaskRequestModel = {
-	workType: string;
-	workPrice: number | null;
-	completeDate: Date | null;
-	comment?: string;
+	clientType: string;
 };
 
 type TaskDto = ExecutorTaskDto | AdminTaskDto;
@@ -63,7 +64,7 @@ type TaskRequestQuery = {
 
 type TasksMutationRequestModel = {
 	id: string;
-	body: AssignTaskRequestDto;
+	body: AssignTaskRequestDto | CompleteTaskRequestDto;
 };
 
 export type {
@@ -73,12 +74,12 @@ export type {
 	AdminTaskPreviewDto,
 	ExecutorTaskPreviewDto,
 	ExecutorTasksPreviewDto,
+	CompleteTaskRequestDto,
 	ExecutorTaskModel,
 	AdminTaskDto,
 	ExecutorTaskDto,
 	TaskDto,
 	AssignTaskRequestDto,
-	CompleteTaskRequestModel,
 	TaskRequestQuery,
 	TasksMutationRequestModel,
 };

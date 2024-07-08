@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { Dictionary } from '@models/dictionaries';
 import {
 	Box as MuiBox,
+	FormHelperText as MuiFormHelperText,
 	inputBaseClasses,
 	InputLabel as MuiInputLabel,
 	MenuItem,
@@ -25,6 +26,15 @@ const InputLabel = styled(MuiInputLabel)(({ theme }) => ({
 
 const Typography = styled(MuiTypography)(({ theme }) => ({
 	color: theme.palette.grey[300],
+}));
+
+const FormHelperText = styled(MuiFormHelperText)(({ theme }) => ({
+	width: '80%',
+	overflowWrap: 'break-word',
+	fontSize: theme.typography.h6.fontSize,
+	margin: theme.spacing(0),
+	paddingTop: theme.spacing(1),
+	color: theme.palette.error.main,
 }));
 
 const selectInputStyles = (error?: boolean) => {
@@ -54,7 +64,7 @@ const selectInputStyles = (error?: boolean) => {
 			color: theme.palette.secondary.main,
 		},
 		[`& .${inputBaseClasses.input}`]: {
-			height: 40,
+			height: 'auto',
 			padding: `0 ${theme.spacing(2)}`,
 			paddingRight: theme.spacing(2),
 			textOverflow: 'ellipsis',
@@ -69,9 +79,10 @@ interface SelectProps {
 	options: Dictionary[];
 	onChange: (event: SelectChangeEvent<unknown>, child: ReactNode) => void;
 	error?: boolean;
+	helperText?: string;
 }
 
-const SelectInput = ({ options, onChange, disabled, label, value, error }: SelectProps) => {
+const SelectInput = ({ options, onChange, disabled, label, value, helperText, error }: SelectProps) => {
 	return (
 		<Box>
 			<InputLabel>{label}</InputLabel>
@@ -82,6 +93,7 @@ const SelectInput = ({ options, onChange, disabled, label, value, error }: Selec
 				displayEmpty
 				renderValue={(value) => value || <Typography>Введите...</Typography>}
 				sx={selectInputStyles(error)}
+				error={error}
 			>
 				{options.map((option) => (
 					<MenuItem key={option.code} value={option.value}>
@@ -89,6 +101,7 @@ const SelectInput = ({ options, onChange, disabled, label, value, error }: Selec
 					</MenuItem>
 				))}
 			</Select>
+			{helperText && <FormHelperText>{helperText}</FormHelperText>}
 		</Box>
 	);
 };

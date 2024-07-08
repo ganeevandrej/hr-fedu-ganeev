@@ -1,17 +1,16 @@
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useSelector } from 'react-redux';
 import AmountInput from '@common/atoms/inputs/AmountInput';
 import DateInput from '@common/atoms/inputs/DateInput';
 import MultilineTextInput from '@common/atoms/inputs/MultilineTextInput';
 import SelectInput from '@common/atoms/inputs/SelectInput';
 import CardTemplate from '@common/molecules/CardTemplate';
-import { CompleteTaskRequestModel } from '@models/tasks';
 import { Grid } from '@mui/material';
-import { RootState } from '@store/store';
+import useAppSelector from '@store/hooks/useAppSelector';
+import { CompleteTaskRequestModel } from './taskCompletionFormSettings';
 
 const TaskCompletionForm = () => {
-	const workTypes = useSelector((state: RootState) => state.dictionaries.workTypes);
+	const workTypes = useAppSelector((state) => state.dictionaries.workTypes);
 	const { control } = useFormContext<CompleteTaskRequestModel>();
 
 	return (
@@ -22,13 +21,15 @@ const TaskCompletionForm = () => {
 						<Controller
 							name="workType"
 							control={control}
-							render={({ field }) => {
+							render={({ field, fieldState }) => {
 								return (
 									<SelectInput
 										label="Фактический вид работ"
 										options={workTypes}
-										value={field.value}
+										value={field.value || ''}
 										onChange={field.onChange}
+										error={Boolean(fieldState.error?.message)}
+										helperText={fieldState.error?.message}
 									/>
 								);
 							}}
@@ -38,8 +39,16 @@ const TaskCompletionForm = () => {
 						<Controller
 							name="workPrice"
 							control={control}
-							render={({ field }) => {
-								return <AmountInput value={field.value} label="Стоимость оказанных услуг" onChange={field.onChange} />;
+							render={({ field, fieldState }) => {
+								return (
+									<AmountInput
+										value={field.value}
+										label="Стоимость оказанных услуг"
+										onChange={field.onChange}
+										helperText={fieldState.error?.message}
+										error={Boolean(fieldState.error?.message)}
+									/>
+								);
 							}}
 						/>
 					</Grid>

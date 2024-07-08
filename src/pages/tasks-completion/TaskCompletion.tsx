@@ -1,26 +1,44 @@
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
-import { useGetTaskByIdQuery } from '@api/tasks/taskApi';
-import { BreadcrumbItem } from '@common/atoms/BreadCrumbs';
+import { FormProvider, Resolver, useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetTaskByIdQuery, useTasksCompleteMutation } from '@api/tasks/taskApi';
 import LoaderBox from '@common/atoms/LoaderBox';
 import PageTemplate from '@common/molecules/PageTemplate';
-import { CompleteTaskRequestModel } from '@models/tasks';
+import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
+import { Breadcrumb } from '@models/breadCrunbs';
 import { Grid } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query';
 import TaskCompletionForm from './TaskCompletionForm';
-import { defaultValues } from './taskCompletionFormSettings';
+import { CompleteTaskRequestModel, useCompleteTaskSchema } from './taskCompletionFormSettings';
 import TaskCompletionGeneral from './TaskCompletionGeneral';
+import { mapToDto } from './taskCompletionMapper';
 
-const breadcrumbsData: BreadcrumbItem[] = [{ label: 'Заявки', to: '/tasks' }];
+const breadcrumbsData: Breadcrumb[] = [{ label: 'Заявки', to: '/tasks' }];
 
 const TaskCompletion = () => {
 	const params = useParams();
+	const navigate = useNavigate();
+
 	const { data: taskData, isLoading } = useGetTaskByIdQuery(params.id ?? skipToken);
+
+	const [tasksComplete] = useTasksCompleteMutation();
+	const { schema, defaultValues } = useCompleteTaskSchema();
 
 	const formContext = useForm<CompleteTaskRequestModel>({
 		defaultValues,
+		mode: 'onSubmit',
+		resolver: yupResolver(schema, undefined, { mode: 'async', raw: true }) as Resolver<CompleteTaskRequestModel>,
 	});
+
+	const handleSubmit = (data: CompleteTaskRequestModel) => {
+		tasksComplete({
+			id: params.id || '',
+			body: mapToDto(data),
+		})
+			.unwrap()
+			.then(() => navigate('/tasks'))
+			.catch(() => {});
+	};
 
 	return isLoading ? (
 		<LoaderBox />
@@ -31,10 +49,14 @@ const TaskCompletion = () => {
 			isFormDirty={formContext.formState.isDirty}
 			submitFormName="task-completion-card"
 			submitButtonLabel="Завершить"
-			submitButtonHandler={() => {}}
 		>
 			<FormProvider {...formContext}>
-				<form id="task-completion-card" name="task-completion-card" noValidate>
+				<form
+					noValidate
+					id="task-completion-card"
+					name="task-completion-card"
+					onSubmit={formContext.handleSubmit(handleSubmit)}
+				>
 					<Grid container rowGap={6}>
 						<Grid item xs={12}>
 							<TaskCompletionGeneral taskData={taskData!} />
