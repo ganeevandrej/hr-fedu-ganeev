@@ -113,6 +113,13 @@ const theme = createTheme({
 				},
 			},
 		},
+		MuiTablePagination: {
+			styleOverrides: {
+				root: {
+					marginTop: '46px',
+				},
+			},
+		},
 		MuiBreadcrumbs: {
 			styleOverrides: {
 				root: {

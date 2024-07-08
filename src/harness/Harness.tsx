@@ -10,7 +10,7 @@ const Workspace = styled(Box)(({ theme }) => ({
 	marginTop: theme.spacing(11.5),
 	display: 'flex',
 	width: '100%',
-	height: 'calc(100vh - 46px)',
+	height: 'auto',
 }));
 
 const Harness = () => {
