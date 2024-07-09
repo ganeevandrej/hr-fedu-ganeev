@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import DataNotFoundBox from '@common/atoms/DataNotFoundBox';
-import { Box as MuiBox, styled as styledMui } from '@mui/material';
+import { Box as MuiBox, styled as styledMui, TablePagination } from '@mui/material';
 import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table';
 import styled from 'styled-components';
+import TablePaginationActions from './TablePaginationActions';
 
 const Box = styledMui(MuiBox)(({ theme }) => ({
 	backgroundColor: theme.palette.common.white,
@@ -10,7 +11,8 @@ const Box = styledMui(MuiBox)(({ theme }) => ({
 	width: '100%',
 	borderRadius: theme.spacing(2.5),
 	padding: theme.spacing(3),
-	paddingBottom: theme.spacing(10),
+	paddingBottom: theme.spacing(6),
+	marginBottom: theme.spacing(22),
 }));
 
 const Table = styled.table`
@@ -53,7 +55,24 @@ type Props<T, S> = {
 };
 
 const BasicTable = <T, S>({ columns, data, navigateToCard }: Props<T, S>) => {
-	const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel() });
+	const [page, setPage] = useState<number>(0);
+	const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+
+	const currentItems = useMemo(
+		() => data.slice(page * rowsPerPage, (page + 1) * rowsPerPage),
+		[data, rowsPerPage, page],
+	);
+
+	const table = useReactTable({ data: currentItems, columns, getCoreRowModel: getCoreRowModel() });
+
+	const handleChangePage = (_event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+		setPage(newPage);
+	};
+
+	const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+		setRowsPerPage(Number(event.target.value));
+		setPage(0);
+	};
 
 	return (
 		<Box>
@@ -94,6 +113,20 @@ const BasicTable = <T, S>({ columns, data, navigateToCard }: Props<T, S>) => {
 					)}
 				</tbody>
 			</Table>
+			{data.length > 0 && (
+				<TablePagination
+					component="div"
+					rowsPerPageOptions={[5, 10, 15]}
+					labelRowsPerPage="Строк на странице"
+					labelDisplayedRows={({ from, to, count }) => `${from}–${to} из ${count}`}
+					count={data.length}
+					page={page}
+					onPageChange={handleChangePage}
+					rowsPerPage={rowsPerPage}
+					onRowsPerPageChange={handleChangeRowsPerPage}
+					ActionsComponent={TablePaginationActions}
+				/>
+			)}
 		</Box>
 	);
 };
