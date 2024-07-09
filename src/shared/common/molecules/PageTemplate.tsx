@@ -1,5 +1,6 @@
 import React from 'react';
-import BreadCrumbs, { BreadcrumbItem } from '@common/atoms/BreadCrumbs';
+import BreadCrumbs from '@common/atoms/BreadCrumbs';
+import { Breadcrumb } from '@models/breadCrumbs';
 import { Box as MuiBox, Button, styled, Typography as MuiTypography } from '@mui/material';
 
 const PageTitle = styled(MuiTypography)(({ theme }) => ({
@@ -27,7 +28,7 @@ const FooterTemplate = styled(MuiBox)(({ theme }) => ({
 
 interface PageTemplateProps {
 	title: string;
-	breadcrumbsData: BreadcrumbItem[];
+	breadcrumbsData: Breadcrumb[];
 	isFormDirty?: boolean;
 	children: React.ReactNode;
 	submitFormName?: string;

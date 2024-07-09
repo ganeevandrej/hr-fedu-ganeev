@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Breadcrumb } from '@models/breadCrunbs';
+import { Breadcrumb } from '@models/breadCrumbs';
 import { Breadcrumbs as MuiBreadcrumbs, Link, styled, Typography } from '@mui/material';
 
 interface Props {

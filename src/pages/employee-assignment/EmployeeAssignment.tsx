@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FormProvider, Resolver, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
 import { useGetTaskByIdQuery, useTasksAssignMutation } from '@api/tasks/taskApi';
 import LoaderBox from '@common/atoms/LoaderBox';
 import PageTemplate from '@common/molecules/PageTemplate';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
-import { Breadcrumb } from '@models/breadCrunbs';
+import { Breadcrumb } from '@models/breadCrumbs';
 import { Grid } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query';
 import EmployeeAssignmentForm from './EmployeeAssignmentForm';
 import { EmployeeAssignmentRequestModel, useEmployeeAssignmentSchema } from './employeeAssignmentFormSettings';
 import EmployeeAssignmentGeneral from './EmployeeAssignmentGeneral';
-import { mapToDto } from './employeeAssignmentMapper';
+import { mapToDto, mapToEmployeeAssignmentRequestModel } from './employeeAssignmentMapper';
 
 const breadcrumbsData: Breadcrumb[] = [{ label: 'Заявки', to: '/tasks' }];
 
@@ -31,13 +31,40 @@ const EmployeeAssignment = () => {
 		resolver: yupResolver(schema, undefined, { mode: 'async', raw: true }) as Resolver<EmployeeAssignmentRequestModel>,
 	});
 
+	const { watch, setValue } = formContext;
+
+	useEffect(() => {
+		const savedFormData = sessionStorage.getItem('employeeForm');
+
+		if (savedFormData) {
+			const formData = mapToEmployeeAssignmentRequestModel(JSON.parse(savedFormData));
+			const keysFormData: Array<keyof EmployeeAssignmentRequestModel> = Object.keys(formData) as Array<
+				keyof EmployeeAssignmentRequestModel
+			>;
+
+			keysFormData.forEach((field) => {
+				setValue(field, formData[field], { shouldDirty: true });
+			});
+		}
+	}, [setValue]);
+
+	useEffect(() => {
+		const subscription = watch((value) => {
+			sessionStorage.setItem('employeeForm', JSON.stringify(value));
+		});
+		return () => subscription.unsubscribe();
+	}, [watch]);
+
 	const handleSubmit = (data: EmployeeAssignmentRequestModel) => {
 		taskAssign({
 			id: params.id || '',
 			body: mapToDto(data),
 		})
 			.unwrap()
-			.then(() => navigate('/tasks'))
+			.then(() => {
+				sessionStorage.removeItem('employeeForm');
+				navigate('/tasks');
+			})
 			.catch(() => {});
 	};
 
