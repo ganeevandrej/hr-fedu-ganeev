@@ -7,6 +7,7 @@ import { RoleType } from '@harness/navigation/Router';
 import { AdminTaskPreviewDto, ExecutorTaskPreviewDto } from '@models/tasks';
 import { Box as MuiBox, styled, Typography as MuiTypography } from '@mui/material';
 import useAppSelector from '@store/hooks/useAppSelector';
+import { sortTasks } from '@utils/sorting/sortTasks';
 import { isAdminTaskArray } from './typeGuards/adminTypeGuards';
 import getAdminTasksTableColumns from './adminTasksTableColumns';
 import mapExecutorTasksFromDto from './executorTasksMapper';
@@ -37,16 +38,18 @@ const Tasks = ({ userRole }: Props) => {
 
 	const tasksData = data || [];
 
-	const tasksTable = isAdminTaskArray(tasksData, userRole) ? (
+	const isAdminTasks = isAdminTaskArray(tasksData, userRole);
+
+	const tasksTable = isAdminTasks ? (
 		<BasicTable
-			data={tasksData}
+			data={sortTasks(tasksData, isAdminTasks)}
 			columns={getAdminTasksTableColumns(workTypes)}
 			navigateToCard={navigateToCard}
 			refetch={refetch}
 		/>
 	) : (
 		<BasicTable
-			data={mapExecutorTasksFromDto(tasksData)}
+			data={mapExecutorTasksFromDto(sortTasks(tasksData, isAdminTasks))}
 			columns={getExecutorTasksTableColumns(workTypes)}
 			navigateToCard={navigateToCard}
 			refetch={refetch}

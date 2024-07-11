@@ -1,4 +1,4 @@
-import { ClientTypes } from '@models/tasks';
+import { ClientTypes, TasksStatuses } from '@models/tasks';
 
 type ClientTypesDictionaryType = Record<ClientTypes, string>;
 
@@ -7,4 +7,7 @@ const clientTypesDictionary: ClientTypesDictionaryType = {
 	premium: 'Премиум',
 };
 
-export { clientTypesDictionary };
+const sortStatuses: Array<TasksStatuses> = ['rejected', 'unassigned'];
+const sortClientTypes: Array<ClientTypes> = ['premium', 'standard'];
+
+export { clientTypesDictionary, sortStatuses, sortClientTypes };
