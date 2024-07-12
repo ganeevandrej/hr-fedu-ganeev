@@ -2,9 +2,9 @@ import React from 'react';
 import { FormProvider, Resolver, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetTaskByIdQuery, useTasksCompleteMutation } from '@api/tasks/taskApi';
-import LoaderBox from '@common/atoms/LoaderBox';
 import { useErrorHandler } from '@common/hooks/useErrorHandler';
 import PageTemplate from '@common/molecules/PageTemplate';
+import SkeletonTemplate from '@common/molecules/SkeletonTemplate';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import { Breadcrumb } from '@models/breadCrumbs';
 import { Grid } from '@mui/material';
@@ -43,9 +43,7 @@ const TaskCompletion = () => {
 			.catch(() => {});
 	};
 
-	return isLoading ? (
-		<LoaderBox />
-	) : (
+	return (
 		<PageTemplate
 			title={`Заявка ${params.id || ''}`}
 			breadcrumbsData={breadcrumbsData}
@@ -60,14 +58,18 @@ const TaskCompletion = () => {
 					name="task-completion-card"
 					onSubmit={formContext.handleSubmit(handleSubmit)}
 				>
-					<Grid container rowGap={6}>
-						<Grid item xs={12}>
-							<TaskCompletionGeneral taskData={taskData!} />
+					{isLoading ? (
+						<SkeletonTemplate hasComment title="Учет работ" countGeneralItems={9} />
+					) : (
+						<Grid container rowGap={6}>
+							<Grid item xs={12}>
+								<TaskCompletionGeneral taskData={taskData!} />
+							</Grid>
+							<Grid item xs={12}>
+								<TaskCompletionForm />
+							</Grid>
 						</Grid>
-						<Grid item xs={12}>
-							<TaskCompletionForm />
-						</Grid>
-					</Grid>
+					)}
 				</form>
 			</FormProvider>
 		</PageTemplate>

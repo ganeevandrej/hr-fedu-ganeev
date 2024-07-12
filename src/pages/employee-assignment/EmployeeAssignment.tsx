@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { FormProvider, Resolver, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
 import { useGetTaskByIdQuery, useTasksAssignMutation } from '@api/tasks/taskApi';
-import LoaderBox from '@common/atoms/LoaderBox';
 import { useErrorHandler } from '@common/hooks/useErrorHandler';
 import PageTemplate from '@common/molecules/PageTemplate';
+import SkeletonTemplate from '@common/molecules/SkeletonTemplate';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import { Breadcrumb } from '@models/breadCrumbs';
 import { Grid } from '@mui/material';
@@ -78,9 +78,7 @@ const EmployeeAssignment = () => {
 			.catch(() => {});
 	};
 
-	return isLoading ? (
-		<LoaderBox />
-	) : (
+	return (
 		<PageTemplate
 			title={`Заявка ${params.id || ''}`}
 			breadcrumbsData={breadcrumbsData}
@@ -95,14 +93,18 @@ const EmployeeAssignment = () => {
 					name="employee-assignment-card"
 					noValidate
 				>
-					<Grid container rowGap={6}>
-						<Grid item xs={12}>
-							<EmployeeAssignmentGeneral taskData={taskData!} />
+					{isLoading ? (
+						<SkeletonTemplate title="Назначить исполнителя" countGeneralItems={7} />
+					) : (
+						<Grid container rowGap={6}>
+							<Grid item xs={12}>
+								<EmployeeAssignmentGeneral taskData={taskData!} />
+							</Grid>
+							<Grid item xs={12}>
+								<EmployeeAssignmentForm />
+							</Grid>
 						</Grid>
-						<Grid item xs={12}>
-							<EmployeeAssignmentForm />
-						</Grid>
-					</Grid>
+					)}
 				</form>
 			</FormProvider>
 		</PageTemplate>
