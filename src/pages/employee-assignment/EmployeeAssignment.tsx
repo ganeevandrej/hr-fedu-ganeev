@@ -31,7 +31,11 @@ const EmployeeAssignment = () => {
 		resolver: yupResolver(schema, undefined, { mode: 'async', raw: true }) as Resolver<EmployeeAssignmentRequestModel>,
 	});
 
-	const { watch, setValue } = formContext;
+	const {
+		watch,
+		setValue,
+		formState: { isDirty },
+	} = formContext;
 
 	useEffect(() => {
 		const savedFormData = sessionStorage.getItem('employeeForm');
@@ -43,7 +47,10 @@ const EmployeeAssignment = () => {
 			>;
 
 			keysFormData.forEach((field) => {
-				setValue(field, formData[field], { shouldDirty: true });
+				if (field !== 'createdDate') {
+					const isDirtyField = Boolean(formData[field]);
+					setValue(field, formData[field], { shouldDirty: isDirtyField });
+				}
 			});
 		}
 	}, [setValue]);
@@ -74,7 +81,7 @@ const EmployeeAssignment = () => {
 		<PageTemplate
 			title={`Заявка ${params.id || ''}`}
 			breadcrumbsData={breadcrumbsData}
-			isFormDirty={formContext.formState.isDirty}
+			isFormDirty={isDirty}
 			submitFormName="employee-assignment-card"
 			submitButtonLabel="Назначить"
 		>
