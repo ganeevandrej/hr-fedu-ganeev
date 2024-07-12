@@ -52,9 +52,10 @@ type Props<T, S> = {
 	columns: Array<ColumnDef<T, S>>;
 	data: T[];
 	navigateToCard?: (row: Row<T>) => void;
+	refetch: () => void;
 };
 
-const BasicTable = <T, S>({ columns, data, navigateToCard }: Props<T, S>) => {
+const BasicTable = <T, S>({ columns, data, navigateToCard, refetch }: Props<T, S>) => {
 	const [page, setPage] = useState<number>(0);
 	const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
@@ -89,10 +90,10 @@ const BasicTable = <T, S>({ columns, data, navigateToCard }: Props<T, S>) => {
 					</thead>
 				))}
 				<tbody>
-					{!data || !data?.length ? (
+					{!data || !data.length ? (
 						<TableRow style={{ height: '60vh' }}>
 							<TableCell colSpan={6} style={{ padding: '10px 0 0 0' }}>
-								<DataNotFoundBox title="Список заявок пуст. Приходите позже" />
+								<DataNotFoundBox onUpdate={refetch} title="Список заявок пуст. Приходите позже" />
 							</TableCell>
 						</TableRow>
 					) : (
@@ -113,7 +114,7 @@ const BasicTable = <T, S>({ columns, data, navigateToCard }: Props<T, S>) => {
 					)}
 				</tbody>
 			</Table>
-			{data.length > 0 && (
+			{data.length && (
 				<TablePagination
 					component="div"
 					rowsPerPageOptions={[5, 10, 15]}

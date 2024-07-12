@@ -1,8 +1,16 @@
-import { TaskDto, TasksMutationRequestModel } from '@models/tasks';
+import { TaskDto, TasksMutationRequestModel, TasksPreviewDto, TasksRequestDto } from '@models/tasks';
 import { rtkQueryApi } from '../rtkQueryApi';
 
 const taskApi = rtkQueryApi.injectEndpoints({
 	endpoints: (build) => ({
+		getTasks: build.query<TasksPreviewDto, TasksRequestDto>({
+			query: (params) => ({
+				url: `/v1/tasks`,
+				method: 'GET',
+				params,
+			}),
+			providesTags: ['Task'],
+		}),
 		getTaskById: build.query<TaskDto, string>({
 			query: (id) => ({
 				url: `/v1/tasks/${id}`,
@@ -41,6 +49,7 @@ const taskApi = rtkQueryApi.injectEndpoints({
 });
 
 export const {
+	useGetTasksQuery,
 	useGetTaskByIdQuery,
 	useTasksAssignMutation,
 	useTasksReturnMutation,

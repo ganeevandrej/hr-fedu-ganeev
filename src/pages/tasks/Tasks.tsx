@@ -1,9 +1,12 @@
 import React from 'react';
+import { useGetTasksQuery } from '@api/tasks/taskApi';
 import BasicTable from '@business/organisms/BasicTable';
+import LoaderBox from '@common/atoms/LoaderBox';
 import useNavigateToCard from '@common/hooks/navigateToCard';
-import { AdminTaskPreviewDto, ExecutorTaskPreviewDto, TasksStatuses } from '@models/tasks';
+import { RoleType } from '@harness/navigation/Router';
+import { AdminTaskPreviewDto, ExecutorTaskPreviewDto } from '@models/tasks';
 import { Box as MuiBox, styled, Typography as MuiTypography } from '@mui/material';
-import { ColumnDef } from '@tanstack/table-core';
+import useAppSelector from '@store/hooks/useAppSelector';
 import { isAdminTaskArray } from './typeGuards/adminTypeGuards';
 import getAdminTasksTableColumns from './adminTasksTableColumns';
 import mapExecutorTasksFromDto from './executorTasksMapper';
@@ -22,31 +25,37 @@ const Typography = styled(MuiTypography)(({ theme }) => ({
 	fontFamily: 'InterBold',
 }));
 
-type ExecutorTasksColumnsType = Array<ColumnDef<ExecutorTaskPreviewDto, ClientTypes>>;
+type Props = {
+	userRole: RoleType;
+};
 
-type AdminTasksColumnsType = Array<ColumnDef<AdminTaskPreviewDto, TasksStatuses>>;
-
-const Tasks = () => {
+const Tasks = ({ userRole }: Props) => {
+	const workTypes = useAppSelector((state) => state.dictionaries.workTypes);
 	const navigateToCard = useNavigateToCard<ExecutorTaskPreviewDto | AdminTaskPreviewDto>('id');
 
-	/* eslint-disable @typescript-eslint/no-explicit-any */
-	const data: any = [];
+	const { data, isFetching, refetch } = useGetTasksQuery({});
 
-	const tasksTable = isAdminTaskArray(data) ? (
+	const tasksData = data || [];
+
+	const tasksTable = isAdminTaskArray(tasksData, userRole) ? (
 		<BasicTable
-			data={data}
-			columns={getAdminTasksTableColumns() as AdminTasksColumnsType}
+			data={tasksData}
+			columns={getAdminTasksTableColumns(workTypes)}
 			navigateToCard={navigateToCard}
+			refetch={refetch}
 		/>
 	) : (
 		<BasicTable
-			data={mapExecutorTasksFromDto(data)}
-			columns={getExecutorTasksTableColumns() as ExecutorTasksColumnsType}
+			data={mapExecutorTasksFromDto(tasksData)}
+			columns={getExecutorTasksTableColumns(workTypes)}
 			navigateToCard={navigateToCard}
+			refetch={refetch}
 		/>
 	);
 
-	return (
+	return isFetching ? (
+		<LoaderBox />
+	) : (
 		<Box>
 			<Typography variant="h1">Заявки</Typography>
 			{tasksTable}

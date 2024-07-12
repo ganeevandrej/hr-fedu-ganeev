@@ -17,6 +17,7 @@ const rtkQueryApi = createApi({
 			return headers;
 		},
 	}),
+	tagTypes: ['Task'],
 	endpoints: () => ({}),
 });
 
