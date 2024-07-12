@@ -5,7 +5,7 @@ import { useGetTaskByIdQuery, useTasksCompleteMutation } from '@api/tasks/taskAp
 import LoaderBox from '@common/atoms/LoaderBox';
 import PageTemplate from '@common/molecules/PageTemplate';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
-import { Breadcrumb } from '@models/breadCrunbs';
+import { Breadcrumb } from '@models/breadCrumbs';
 import { Grid } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query';
 import TaskCompletionForm from './TaskCompletionForm';

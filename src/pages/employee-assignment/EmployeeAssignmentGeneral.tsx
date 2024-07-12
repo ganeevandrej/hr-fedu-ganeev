@@ -35,12 +35,14 @@ const EmployeeAssignmentGeneral = <T extends TaskDto>({ taskData }: Props<T>) =>
 
 	const { reset } = useFormContext<EmployeeAssignmentRequestModel>();
 
+	const isFormData = Boolean(sessionStorage.getItem('employeeForm'));
+
 	useEffect(() => {
 		if (adminTaskData) {
 			if (adminTaskData.rejectReason) navigate('/tasks');
-			reset(getDefaultValues(adminTaskData?.createdDate));
+			if (!isFormData) reset(getDefaultValues(adminTaskData?.createdDate));
 		}
-	}, [adminTaskData, reset, navigate]);
+	}, [adminTaskData, reset, navigate, isFormData]);
 
 	const formattedDate = formatDate(new Date(adminTaskData?.createdDate ?? ''));
 
