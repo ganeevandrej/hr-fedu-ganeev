@@ -3,6 +3,7 @@ import { useGetTasksQuery } from '@api/tasks/taskApi';
 import BasicTable from '@business/organisms/BasicTable';
 import LoaderBox from '@common/atoms/LoaderBox';
 import useNavigateToCard from '@common/hooks/navigateToCard';
+import { useErrorHandler } from '@common/hooks/useErrorHandler';
 import { RoleType } from '@harness/navigation/Router';
 import { AdminTaskPreviewDto, ExecutorTaskPreviewDto } from '@models/tasks';
 import { Box as MuiBox, styled, Typography as MuiTypography } from '@mui/material';
@@ -34,7 +35,9 @@ const Tasks = ({ userRole }: Props) => {
 	const workTypes = useAppSelector((state) => state.dictionaries.workTypes);
 	const navigateToCard = useNavigateToCard<ExecutorTaskPreviewDto | AdminTaskPreviewDto>('id');
 
-	const { data, isFetching, refetch } = useGetTasksQuery({});
+	const { data, isFetching, refetch, error } = useGetTasksQuery({});
+
+	useErrorHandler(error);
 
 	const tasksData = data || [];
 

@@ -3,6 +3,7 @@ import { FormProvider, Resolver, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
 import { useGetTaskByIdQuery, useTasksAssignMutation } from '@api/tasks/taskApi';
 import LoaderBox from '@common/atoms/LoaderBox';
+import { useErrorHandler } from '@common/hooks/useErrorHandler';
 import PageTemplate from '@common/molecules/PageTemplate';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import { Breadcrumb } from '@models/breadCrumbs';
@@ -19,7 +20,9 @@ const EmployeeAssignment = () => {
 	const params = useParams();
 	const navigate = useNavigate();
 
-	const { data: taskData, isLoading } = useGetTaskByIdQuery(params.id ?? skipToken);
+	const { data: taskData, isLoading, error } = useGetTaskByIdQuery(params.id ?? skipToken);
+
+	useErrorHandler(error);
 
 	const [taskAssign] = useTasksAssignMutation();
 
