@@ -23,12 +23,14 @@ const taskApi = rtkQueryApi.injectEndpoints({
 				method: 'POST',
 				body: body,
 			}),
+			invalidatesTags: ['Task'],
 		}),
 		tasksReturn: build.mutation<void, string>({
 			query: (id) => ({
 				url: `/v1/tasks/${id}/return`,
 				method: 'POST',
 			}),
+			invalidatesTags: ['Task'],
 		}),
 		tasksComplete: build.mutation<void, TasksMutationRequestModel>({
 			query: ({ id, body }) => ({
@@ -36,12 +38,22 @@ const taskApi = rtkQueryApi.injectEndpoints({
 				method: 'POST',
 				body: body,
 			}),
+			invalidatesTags: ['Task'],
 		}),
 		tasksArchive: build.mutation<void, string>({
 			query: (id) => ({
 				url: `/v1/tasks/${id}/archive`,
 				method: 'POST',
 			}),
+			invalidatesTags: ['Task'],
+		}),
+		tasksReject: build.mutation<void, TasksMutationRequestModel>({
+			query: ({ id, body }) => ({
+				url: `/v1/tasks/${id}/reject`,
+				method: 'POST',
+				body: body,
+			}),
+			invalidatesTags: ['Task'],
 		}),
 	}),
 });
@@ -53,4 +65,5 @@ export const {
 	useTasksReturnMutation,
 	useTasksCompleteMutation,
 	useTasksArchiveMutation,
+	useTasksRejectMutation,
 } = taskApi;

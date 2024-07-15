@@ -49,11 +49,21 @@ interface InputProps extends Omit<TextFieldProps, 'label' | 'disabled' | 'readOn
 	disabled?: boolean;
 	readOnly?: boolean;
 	rows?: number;
+	helperText?: string;
 	maxLength?: number;
 	value?: string | null;
 }
 
-const MultilineTextInput = ({ label, readOnly, value, error, onChange, rows = 4, maxLength = 2000 }: InputProps) => {
+const MultilineTextInput = ({
+	label,
+	readOnly,
+	value,
+	error,
+	helperText,
+	onChange,
+	rows = 4,
+	maxLength = 2000,
+}: InputProps) => {
 	const readOnlyValue = typeof value === 'string' ? value : '--';
 
 	return (
@@ -69,7 +79,7 @@ const MultilineTextInput = ({ label, readOnly, value, error, onChange, rows = 4,
 					multiline
 					rows={rows}
 					inputProps={{ maxLength }}
-					helperText={`${value?.length || '0'}/${maxLength}`}
+					helperText={helperText || `${value?.length || '0'}/${maxLength}`}
 				/>
 			)}
 		</Box>

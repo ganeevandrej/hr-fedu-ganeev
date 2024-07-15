@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGetTasksQuery } from '@api/tasks/taskApi';
 import BasicTable from '@business/organisms/BasicTable';
 import LoaderBox from '@common/atoms/LoaderBox';
 import useNavigateToCard from '@common/hooks/navigateToCard';
 import { useErrorHandler } from '@common/hooks/useErrorHandler';
+import Modal from '@common/molecules/Modal';
 import { RoleType } from '@harness/navigation/Router';
 import { AdminTaskPreviewDto, ExecutorTaskPreviewDto } from '@models/tasks';
 import { Box as MuiBox, styled, Typography as MuiTypography } from '@mui/material';
 import useAppSelector from '@store/hooks/useAppSelector';
 import { sortTasks } from '@utils/sorting/sortTasks';
+import TaskRejection from './task-rejection/taskRejection';
 import { isAdminTaskArray } from './typeGuards/adminTypeGuards';
 import getAdminTasksTableColumns from './adminTasksTableColumns';
 import mapExecutorTasksFromDto from './executorTasksMapper';
@@ -34,6 +36,15 @@ type Props = {
 const Tasks = ({ userRole }: Props) => {
 	const workTypes = useAppSelector((state) => state.dictionaries.workTypes);
 	const navigateToCard = useNavigateToCard<ExecutorTaskPreviewDto | AdminTaskPreviewDto>('id');
+	const [taskId, setTaskId] = useState('');
+	const [open, setOpen] = useState(false);
+
+	const openModal = (id: string) => {
+		setTaskId(id);
+		setOpen(true);
+	};
+
+	const closeModal = () => setOpen(false);
 
 	const { data, isFetching, refetch, error } = useGetTasksQuery({});
 
@@ -53,7 +64,7 @@ const Tasks = ({ userRole }: Props) => {
 	) : (
 		<BasicTable
 			data={mapExecutorTasksFromDto(sortTasks(tasksData, isAdminTasks))}
-			columns={getExecutorTasksTableColumns(workTypes)}
+			columns={getExecutorTasksTableColumns(workTypes, openModal)}
 			navigateToCard={navigateToCard}
 			refetch={refetch}
 		/>
@@ -65,6 +76,9 @@ const Tasks = ({ userRole }: Props) => {
 		<Box>
 			<Typography variant="h1">Заявки</Typography>
 			{tasksTable}
+			<Modal width={635} onClose={closeModal} open={open}>
+				<TaskRejection taskId={taskId} onClose={closeModal} />
+			</Modal>
 		</Box>
 	);
 };

@@ -21,6 +21,11 @@ const statesSnackbar: StateSnackbar = {
 		text: 'Заявка отправлена исполнителю',
 		status: 'success',
 	},
+	successRejection: {
+		title: 'Успешно',
+		text: ' Заявка отклонена',
+		status: 'success',
+	},
 	validationError: {
 		title: 'Ошибка валидации',
 		text: 'Проверьте корректность введенных значений',

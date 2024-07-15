@@ -13,9 +13,18 @@ const Button = styled(MuiButton)(({ theme }) => ({
 	},
 }));
 
-const DeleteButton = () => {
+type Props = {
+	openModal: (taskId: string) => void;
+	taskId: string;
+};
+
+const DeleteButton = ({ openModal, taskId }: Props) => {
+	const handleClick = () => {
+		openModal(taskId);
+	};
+
 	return (
-		<Button disableTouchRipple>
+		<Button disableTouchRipple onClick={handleClick}>
 			<BlockIcon fontSize="small" />
 		</Button>
 	);

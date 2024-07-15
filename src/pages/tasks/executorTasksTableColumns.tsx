@@ -13,7 +13,10 @@ type ExecutorTasksColumnsType = ColumnDef<ExecutorTaskModel, ClientTypes>[];
 
 const columnHelper = createColumnHelper<ExecutorTaskModel>();
 
-const getExecutorTasksTableColumns = (workTypes: Dictionary[]): ExecutorTasksColumnsType => {
+const getExecutorTasksTableColumns = (
+	workTypes: Dictionary[],
+	openModal: (taskId: string) => void,
+): ExecutorTasksColumnsType => {
 	return [
 		columnHelper.accessor('id', {
 			size: 100,
@@ -59,11 +62,15 @@ const getExecutorTasksTableColumns = (workTypes: Dictionary[]): ExecutorTasksCol
 			id: 'isExpiring',
 			size: 150,
 			header: '',
-			cell: () => (
-				<Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-					<DeleteButton />
-				</Box>
-			),
+			cell: (info) => {
+				const { id } = info.row.original;
+
+				return (
+					<Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+						<DeleteButton taskId={id} openModal={openModal} />
+					</Box>
+				);
+			},
 		}),
 	];
 };

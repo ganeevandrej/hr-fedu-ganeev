@@ -55,6 +55,11 @@ type CompleteTaskRequestDto = {
 	comment?: string;
 };
 
+type RejectTaskRequestDto = {
+	reason: string;
+	comment: string;
+};
+
 type ExecutorTaskDto = Task & {
 	deadlineDate: string;
 	recommendedPrice: number;
@@ -73,7 +78,7 @@ type TaskRequestQuery = {
 
 type TasksMutationRequestModel = {
 	id: string;
-	body: AssignTaskRequestDto | CompleteTaskRequestDto;
+	body: AssignTaskRequestDto | CompleteTaskRequestDto | RejectTaskRequestDto;
 };
 
 export type {
@@ -84,6 +89,7 @@ export type {
 	ExecutorTaskPreviewDto,
 	ExecutorTasksPreviewDto,
 	CompleteTaskRequestDto,
+	RejectTaskRequestDto,
 	ExecutorTaskModel,
 	AdminTaskDto,
 	ExecutorTaskDto,

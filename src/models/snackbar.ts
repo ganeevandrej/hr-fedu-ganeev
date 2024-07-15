@@ -5,7 +5,8 @@ type FieldSnackbar =
 	| 'validationError'
 	| 'technicalError'
 	| 'successArchive'
-	| 'successReturn';
+	| 'successReturn' 
+	| 'successRejection';
 
 type ValueSnackbar = {
 	title: string;
