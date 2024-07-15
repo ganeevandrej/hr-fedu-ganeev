@@ -77,7 +77,7 @@ const TaskCompletion = () => {
 					) : (
 						<Grid container rowGap={6}>
 							<Grid item xs={12}>
-								<TaskCompletionGeneral taskData={taskData!} />
+								<TaskCompletionGeneral taskData={taskData} />
 							</Grid>
 							<Grid item xs={12}>
 								<TaskCompletionForm />

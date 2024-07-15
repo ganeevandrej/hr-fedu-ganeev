@@ -110,7 +110,7 @@ const EmployeeAssignment = () => {
 					) : (
 						<Grid container rowGap={6}>
 							<Grid item xs={12}>
-								<EmployeeAssignmentGeneral taskData={taskData!} />
+								<EmployeeAssignmentGeneral taskData={taskData} />
 							</Grid>
 							<Grid item xs={12}>
 								<EmployeeAssignmentForm />

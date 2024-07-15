@@ -13,7 +13,7 @@ import { getDictionaryValueByCode } from '@utils/dictionary/dictionaryParsing';
 import { CompleteTaskRequestModel, getDefaultValues } from './taskCompletionFormSettings';
 
 type Props<T> = {
-	taskData: T;
+	taskData?: T;
 };
 
 const TaskCompletionGeneral = <T extends TaskDto>({ taskData }: Props<T>) => {

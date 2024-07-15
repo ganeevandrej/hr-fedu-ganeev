@@ -1,5 +1,11 @@
 type StatusSnackbar = 'success' | 'error';
-type FieldSnackbar = 'successCompleted' | 'successAssign' | 'validationError' | 'technicalError';
+type FieldSnackbar =
+	| 'successCompleted'
+	| 'successAssign'
+	| 'validationError'
+	| 'technicalError'
+	| 'successArchive'
+	| 'successReturn';
 
 type ValueSnackbar = {
 	title: string;
