@@ -5,6 +5,8 @@ import { useGetTaskByIdQuery, useTasksAssignMutation } from '@api/tasks/taskApi'
 import { useErrorHandler } from '@common/hooks/useErrorHandler';
 import PageTemplate from '@common/molecules/PageTemplate';
 import SkeletonTemplate from '@common/molecules/SkeletonTemplate';
+import { statesSnackbar } from '@harness/context/constants';
+import { useSnackbar } from '@harness/context/snackbar';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import { Breadcrumb } from '@models/breadCrumbs';
 import { Grid } from '@mui/material';
@@ -19,6 +21,9 @@ const breadcrumbsData: Breadcrumb[] = [{ label: 'Заявки', to: '/tasks' }];
 const EmployeeAssignment = () => {
 	const params = useParams();
 	const navigate = useNavigate();
+	const { showSnackbar } = useSnackbar();
+
+	const { successAssign, validationError, technicalError } = statesSnackbar;
 
 	const { data: taskData, isLoading, error } = useGetTaskByIdQuery(params.id ?? skipToken);
 
@@ -73,9 +78,16 @@ const EmployeeAssignment = () => {
 			.unwrap()
 			.then(() => {
 				sessionStorage.removeItem('employeeForm');
+				showSnackbar(successAssign);
 				navigate('/tasks');
 			})
-			.catch(() => {});
+			.catch(() => {
+				showSnackbar(technicalError);
+			});
+	};
+
+	const handlerErrors = () => {
+		showSnackbar(validationError);
 	};
 
 	return (
@@ -88,7 +100,7 @@ const EmployeeAssignment = () => {
 		>
 			<FormProvider {...formContext}>
 				<form
-					onSubmit={formContext.handleSubmit(handleSubmit)}
+					onSubmit={formContext.handleSubmit(handleSubmit, handlerErrors)}
 					id="employee-assignment-card"
 					name="employee-assignment-card"
 					noValidate
