@@ -3,6 +3,7 @@ import { FormProvider, Resolver, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGetTaskByIdQuery, useTasksCompleteMutation } from '@api/tasks/taskApi';
 import LoaderBox from '@common/atoms/LoaderBox';
+import { useErrorHandler } from '@common/hooks/useErrorHandler';
 import PageTemplate from '@common/molecules/PageTemplate';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import { Breadcrumb } from '@models/breadCrumbs';
@@ -19,7 +20,9 @@ const TaskCompletion = () => {
 	const params = useParams();
 	const navigate = useNavigate();
 
-	const { data: taskData, isLoading } = useGetTaskByIdQuery(params.id ?? skipToken);
+	const { data: taskData, isLoading, error } = useGetTaskByIdQuery(params.id ?? skipToken);
+
+	useErrorHandler(error);
 
 	const [tasksComplete] = useTasksCompleteMutation();
 	const { schema, defaultValues } = useCompleteTaskSchema();
