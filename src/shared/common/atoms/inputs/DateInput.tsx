@@ -20,8 +20,8 @@ const InputLabel = styled(MuiInputLabel)(({ theme }) => ({
 	fontSize: theme.typography.h4.fontSize,
 }));
 
-const dateInputStyles = {
-	width: '80%',
+const getDateInputStyles = (width = '80%') => ({
+	width,
 	padding: 0,
 	[`& .${inputBaseClasses.root}`]: {
 		display: 'flex',
@@ -56,14 +56,16 @@ const dateInputStyles = {
 		margin: 0,
 		paddingTop: theme.spacing(1),
 	},
-};
+});
 
 interface DateInputProps extends Omit<DesktopDatePickerProps<Date>, 'value' | 'error'> {
 	value?: Date | null;
 	error?: string;
+	placeholder?: string;
+	width?: string;
 }
 
-const DateInput = ({ value, label, readOnly, error, onChange, ...rest }: DateInputProps) => {
+const DateInput = ({ value, label, readOnly, placeholder, error, onChange, width, ...rest }: DateInputProps) => {
 	const readOnlyValue = value ? value.toLocaleDateString() : '--';
 
 	return (
@@ -75,12 +77,12 @@ const DateInput = ({ value, label, readOnly, error, onChange, ...rest }: DateInp
 				<DesktopDatePicker
 					{...rest}
 					value={value}
-					sx={dateInputStyles}
+					sx={getDateInputStyles(width)}
 					showDaysOutsideCurrentMonth
 					onChange={onChange}
 					slotProps={{
 						openPickerButton: { color: 'secondary' },
-						textField: { error: !!error, helperText: error, color: 'secondary' },
+						textField: { placeholder, error: !!error, helperText: error, color: 'secondary' },
 					}}
 				/>
 			)}

@@ -1,6 +1,9 @@
 import React, { useMemo, useState } from 'react';
+import BlockFilters from '@business/molecules/BlockFilters';
 import DataNotFoundBox from '@common/atoms/DataNotFoundBox';
-import { Box as MuiBox, styled as styledMui, TablePagination } from '@mui/material';
+import FilterIcon from '@mui/icons-material/FilterList';
+import { Box as MuiBox, IconButton, styled as styledMui, TablePagination } from '@mui/material';
+import { TasksRequestModel } from '@pages/tasks/filters/FiltersFormSetting';
 import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table';
 import styled from 'styled-components';
 import TablePaginationActions from './TablePaginationActions';
@@ -13,6 +16,20 @@ const Box = styledMui(MuiBox)(({ theme }) => ({
 	padding: theme.spacing(3),
 	paddingBottom: theme.spacing(6),
 	marginBottom: theme.spacing(22),
+}));
+
+const ContainerFilters = styledMui(MuiBox)({
+	display: 'flex',
+	flexDirection: 'row',
+	alignItems: 'center',
+});
+
+const VerticalLine = styledMui(MuiBox)(({ theme }) => ({
+	backgroundColor: '#BDC0E4',
+	width: '2px',
+	height: '40px',
+	marginLeft: theme.spacing(8),
+	marginRight: theme.spacing(8),
 }));
 
 const Table = styled.table`
@@ -53,11 +70,24 @@ type Props<T, S> = {
 	data: T[];
 	navigateToCard?: (row: Row<T>) => void;
 	refetch: () => void;
+	openFilters?: () => void;
+	filters?: TasksRequestModel;
+	setFilters: (key?: keyof TasksRequestModel) => void;
 };
 
-const BasicTable = <T, S>({ columns, data, navigateToCard, refetch }: Props<T, S>) => {
+const BasicTable = <T, S>({
+	columns,
+	data,
+	filters,
+	navigateToCard,
+	refetch,
+	openFilters,
+	setFilters,
+}: Props<T, S>) => {
 	const [page, setPage] = useState<number>(0);
 	const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+	const filtersValues = filters ? Object.values(filters) : [];
+	const hasValueNotEmpty = filtersValues.some((value) => Boolean(value) === true);
 
 	const currentItems = useMemo(
 		() => data.slice(page * rowsPerPage, (page + 1) * rowsPerPage),
@@ -77,6 +107,13 @@ const BasicTable = <T, S>({ columns, data, navigateToCard, refetch }: Props<T, S
 
 	return (
 		<Box>
+			<ContainerFilters>
+				<IconButton onClick={openFilters}>
+					<FilterIcon sx={{ color: '#BDC0E4' }} />
+				</IconButton>
+				<VerticalLine />
+				<BlockFilters filters={filters} hasValueNotEmpty={hasValueNotEmpty} handleFilterDelete={setFilters} />
+			</ContainerFilters>
 			<Table>
 				{table.getHeaderGroups().map((headerGroup) => (
 					<thead key={headerGroup.id}>
@@ -93,7 +130,11 @@ const BasicTable = <T, S>({ columns, data, navigateToCard, refetch }: Props<T, S
 					{!data || !data.length ? (
 						<TableRow style={{ height: '60vh' }}>
 							<TableCell colSpan={6} style={{ padding: '10px 0 0 0' }}>
-								<DataNotFoundBox onUpdate={refetch} title="Список заявок пуст. Приходите позже" />
+								<DataNotFoundBox
+									onUpdate={hasValueNotEmpty ? setFilters : refetch}
+									textButton={hasValueNotEmpty ? 'Сбросить фильтры' : 'Обновить'}
+									title="Список заявок пуст. Приходите позже"
+								/>
 							</TableCell>
 						</TableRow>
 					) : (
@@ -114,7 +155,7 @@ const BasicTable = <T, S>({ columns, data, navigateToCard, refetch }: Props<T, S
 					)}
 				</tbody>
 			</Table>
-			{data.length && (
+			{data.length > 0 && (
 				<TablePagination
 					component="div"
 					rowsPerPageOptions={[5, 10, 15]}

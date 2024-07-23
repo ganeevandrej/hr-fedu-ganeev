@@ -29,8 +29,8 @@ type ExecutorTaskModel = ExecutorTaskPreviewDto & {
 };
 
 type TasksRequestDto = {
-	startDate?: Date;
-	endDate?: Date;
+	startDate?: string;
+	endDate?: string;
 	priceFrom?: number;
 	priceTo?: number;
 };

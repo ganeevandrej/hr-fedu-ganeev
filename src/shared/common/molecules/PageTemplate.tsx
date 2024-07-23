@@ -12,7 +12,7 @@ const PageTitle = styled(MuiTypography)(({ theme }) => ({
 const PageContainer = styled(MuiBox)(({ theme }) => ({
 	display: 'flex',
 	flexDirection: 'column',
-	width: '100vw',
+	width: '100%',
 	padding: theme.spacing(0, 5),
 }));
 
@@ -28,7 +28,7 @@ const FooterTemplate = styled(MuiBox)(({ theme }) => ({
 
 interface PageTemplateProps {
 	title: string;
-	breadcrumbsData: Breadcrumb[];
+	breadcrumbsData?: Breadcrumb[];
 	isFormDirty?: boolean;
 	children: React.ReactNode;
 	submitFormName?: string;
@@ -51,7 +51,7 @@ const PageTemplate = ({
 }: PageTemplateProps) => {
 	return (
 		<PageContainer>
-			<BreadCrumbs title={title} items={breadcrumbsData} />
+			{breadcrumbsData && <BreadCrumbs title={title} items={breadcrumbsData} />}
 			<BodyTemplate>
 				<PageTitle variant="h1">{title}</PageTitle>
 				{children}

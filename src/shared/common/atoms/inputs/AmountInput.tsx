@@ -69,6 +69,7 @@ const TextField = styled(MuiTextField)(({ theme }) => ({
 interface AmountProps extends Omit<TextFieldProps, 'value' | 'label' | 'disabled' | 'readOnly'> {
 	value: number | null | string;
 	label?: string;
+	width?: string;
 	disabled?: boolean;
 	readOnly?: boolean;
 }
@@ -101,7 +102,17 @@ const NumericFormatCustom = React.forwardRef<NumericFormatProps, CustomProps>(fu
 	);
 });
 
-const AmountInput = ({ value, label, disabled, onChange, readOnly, helperText, error }: AmountProps) => {
+const AmountInput = ({
+	value,
+	label,
+	width,
+	disabled,
+	onChange,
+	placeholder,
+	readOnly,
+	helperText,
+	error,
+}: AmountProps) => {
 	const readOnlyValue = typeof value === 'number' ? `${value.toFixed(2).replace('.', ',')} руб.` : value;
 
 	const handleAmountInputChange =
@@ -120,8 +131,9 @@ const AmountInput = ({ value, label, disabled, onChange, readOnly, helperText, e
 			) : (
 				<TextField
 					disabled={disabled}
-					placeholder="0,00"
+					placeholder={placeholder || '0,00'}
 					value={value}
+					sx={{ width: width }}
 					onChange={handleAmountInputChange(onChange)}
 					InputProps={{
 						endAdornment: <InputAdornment position="end">руб.</InputAdornment>,

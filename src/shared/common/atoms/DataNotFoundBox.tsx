@@ -22,9 +22,10 @@ const Typography = styled(MuiTypography)(({ theme }) => ({
 type Props = {
 	title: string;
 	onUpdate: () => void;
+	textButton?: string;
 };
 
-const DataNotFoundBox = ({ title, onUpdate }: Props) => {
+const DataNotFoundBox = ({ title, onUpdate, textButton = 'Обновить' }: Props) => {
 	return (
 		<Box>
 			<Typography variant="h1">{title}</Typography>
@@ -32,12 +33,12 @@ const DataNotFoundBox = ({ title, onUpdate }: Props) => {
 				sx={{
 					marginTop: '30px',
 				}}
-				onClick={onUpdate}
+				onClick={() => onUpdate()}
 				variant="contained"
 				color="secondary"
-				name={'Обновить'}
+				name={textButton}
 			>
-				Обновить
+				{textButton}
 			</Button>
 		</Box>
 	);
