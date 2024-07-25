@@ -127,6 +127,14 @@ const theme = createTheme({
 				},
 			},
 		},
+		MuiSkeleton: {
+			styleOverrides: {
+				rounded: {
+					borderRadius: '10px',
+					backgroundColor: '#D9D9D9',
+				},
+			},
+		},
 	},
 });
 
