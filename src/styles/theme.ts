@@ -135,6 +135,31 @@ const theme = createTheme({
 				},
 			},
 		},
+		MuiSnackbar: {
+			styleOverrides: {
+				root: {
+					width: '352px',
+					'@media (min-width:600px)': {
+						top: '70px',
+						right: '32px',
+					},
+				},
+			},
+		},
+		MuiAlert: {
+			styleOverrides: {
+				root: {
+					color: '#74767C',
+					width: '100%',
+				},
+				filledSuccess: {
+					backgroundColor: '#AAE7AC',
+				},
+				filledError: {
+					backgroundColor: '#FF9999',
+				},
+			},
+		},
 	},
 });
 

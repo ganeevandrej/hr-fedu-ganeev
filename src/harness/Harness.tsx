@@ -5,6 +5,7 @@ import AppHeader from '@harness/portal/app-header/AppHeader';
 import { Box, CssBaseline, styled } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '@styles/theme';
+import SnackbarProvider from './context/snackbar';
 
 const Workspace = styled(Box)(({ theme }) => ({
 	marginTop: theme.spacing(11.5),
@@ -16,13 +17,15 @@ const Workspace = styled(Box)(({ theme }) => ({
 const Harness = () => {
 	return (
 		<ThemeProvider theme={theme}>
-			<CssBaseline />
-			<ErrorBoundary>
-				<AppHeader />
-				<Workspace>
-					<Outlet />
-				</Workspace>
-			</ErrorBoundary>
+			<SnackbarProvider>
+				<CssBaseline />
+				<ErrorBoundary>
+					<AppHeader />
+					<Workspace>
+						<Outlet />
+					</Workspace>
+				</ErrorBoundary>
+			</SnackbarProvider>
 		</ThemeProvider>
 	);
 };

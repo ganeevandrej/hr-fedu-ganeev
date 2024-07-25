@@ -4,7 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useGetTaskByIdQuery, useTasksCompleteMutation } from '@api/tasks/taskApi';
 import { useErrorHandler } from '@common/hooks/useErrorHandler';
 import PageTemplate from '@common/molecules/PageTemplate';
+import { statesSnackbar } from '@harness/context/constants';
 import SkeletonTemplate from '@common/molecules/SkeletonTemplate';
+import { useSnackbar } from '@harness/context/snackbar';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import { Breadcrumb } from '@models/breadCrumbs';
 import { Grid } from '@mui/material';
@@ -19,6 +21,9 @@ const breadcrumbsData: Breadcrumb[] = [{ label: 'Заявки', to: '/tasks' }];
 const TaskCompletion = () => {
 	const params = useParams();
 	const navigate = useNavigate();
+	const { showSnackbar } = useSnackbar();
+
+	const { successCompleted, validationError, technicalError } = statesSnackbar;
 
 	const { data: taskData, isLoading, error } = useGetTaskByIdQuery(params.id ?? skipToken);
 
@@ -39,8 +44,17 @@ const TaskCompletion = () => {
 			body: mapToDto(data),
 		})
 			.unwrap()
-			.then(() => navigate('/tasks'))
-			.catch(() => {});
+			.then(() => {
+				showSnackbar(successCompleted);
+				navigate('/tasks');
+			})
+			.catch(() => {
+				showSnackbar(technicalError);
+			});
+	};
+
+	const handlerErrors = () => {
+		showSnackbar(validationError);
 	};
 
 	return (
@@ -56,7 +70,7 @@ const TaskCompletion = () => {
 					noValidate
 					id="task-completion-card"
 					name="task-completion-card"
-					onSubmit={formContext.handleSubmit(handleSubmit)}
+					onSubmit={formContext.handleSubmit(handleSubmit, handlerErrors)}
 				>
 					{isLoading ? (
 						<SkeletonTemplate hasComment title="Учет работ" countGeneralItems={9} />
