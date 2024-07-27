@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { Row } from '@tanstack/table-core';
 
-const useNavigateToCard = <T>(cardIdPathname: keyof T) => {
+const useNavigateToCard = <T extends object>(cardIdPathname: keyof T) => {
 	const navigate = useNavigate();
 
 	return (row: Row<T>) => {
@@ -9,7 +9,11 @@ const useNavigateToCard = <T>(cardIdPathname: keyof T) => {
 
 		const cardId = String(original[cardIdPathname]);
 
-		navigate(cardId);
+		if ('status' in original && original.status === 'rejected') {
+			navigate(`${cardId}/rejected`);
+		} else {
+			navigate(cardId);
+		}
 	};
 };
 

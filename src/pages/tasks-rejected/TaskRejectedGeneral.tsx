@@ -1,46 +1,22 @@
-import React, { useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import React from 'react';
 import AmountInput from '@common/atoms/inputs/AmountInput';
 import MaskedInput from '@common/atoms/inputs/MaskedInput';
 import TextInput from '@common/atoms/inputs/TextInput';
 import CardTemplate from '@common/molecules/CardTemplate';
 import { TaskDto } from '@models/tasks';
-import { Checkbox as MuiCheckbox, checkboxClasses, FormControlLabel, Grid, styled } from '@mui/material';
+import { Checkbox, FormControlLabel, Grid } from '@mui/material';
 import { isAdminTask } from '@pages/tasks/typeGuards/adminTypeGuards';
 import useAppSelector from '@store/hooks/useAppSelector';
 import { formatDate } from '@utils/date/dateFormatting';
 import { getDictionaryValueByCode } from '@utils/dictionary/dictionaryParsing';
-import { EmployeeAssignmentRequestModel, getDefaultValues } from './employeeAssignmentFormSettings';
-
-const Checkbox = styled(MuiCheckbox)(({ theme }) => ({
-	color: theme.palette.secondary.main,
-	[`& .${checkboxClasses.root}`]: {
-		color: theme.palette.secondary.main,
-		[`& .${checkboxClasses.checked}`]: {
-			color: theme.palette.common.black,
-		},
-	},
-}));
 
 type Props<T> = {
 	taskData?: T;
 };
 
-const EmployeeAssignmentGeneral = <T extends TaskDto>({ taskData }: Props<T>) => {
-	const navigate = useNavigate();
+const TaskRejectedGeneral = <T extends TaskDto>({ taskData }: Props<T>) => {
 	const workTypes = useAppSelector((state) => state.dictionaries.workTypes);
 	const adminTaskData = taskData && isAdminTask(taskData) ? taskData : undefined;
-
-	const { reset } = useFormContext<EmployeeAssignmentRequestModel>();
-
-	const isFormData = Boolean(sessionStorage.getItem('employeeForm'));
-
-	useEffect(() => {
-		if (adminTaskData) {
-			if (!isFormData) reset(getDefaultValues(adminTaskData?.createdDate));
-		}
-	}, [adminTaskData, reset, navigate, isFormData]);
 
 	const formattedDate = formatDate(new Date(adminTaskData?.createdDate ?? ''));
 
@@ -78,7 +54,7 @@ const EmployeeAssignmentGeneral = <T extends TaskDto>({ taskData }: Props<T>) =>
 				<Grid item xs={3}>
 					<TextInput readOnly label="Внутренний код OSU" value={adminTaskData?.codeOSU || '--'} />
 				</Grid>
-				<Grid item xs={3}>
+				<Grid item xs={3} display="flex">
 					<FormControlLabel
 						control={<Checkbox disabled checked={adminTaskData?.clientType === 'premium'} color="secondary" />}
 						label="Премиум клиент"
@@ -89,4 +65,4 @@ const EmployeeAssignmentGeneral = <T extends TaskDto>({ taskData }: Props<T>) =>
 	);
 };
 
-export default EmployeeAssignmentGeneral;
+export default TaskRejectedGeneral;
