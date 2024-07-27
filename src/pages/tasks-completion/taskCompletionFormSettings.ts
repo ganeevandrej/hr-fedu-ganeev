@@ -1,10 +1,11 @@
+import { Dictionary } from '@models/dictionaries';
 import { CompleteTaskRequestDto, ExecutorTaskDto } from '@models/tasks';
 import { NOT_A_DATE, NOT_A_NUMBER } from '@utils/yup-provider/constants';
 import * as yup from 'yup';
 
 interface CompleteTaskRequestModel
 	extends Omit<CompleteTaskRequestDto, 'workType' | 'workPrice' | 'completeDate' | 'comment'> {
-	workType: string | null;
+	workType: Dictionary | null;
 	workPrice: number | null;
 	completeDate: Date | null;
 	comment: string | null;
@@ -20,7 +21,7 @@ const getDefaultValues = (data?: ExecutorTaskDto): CompleteTaskRequestModel => {
 	const { createdDate, deadlineDate, minimalPrice, recommendedPrice, preferablePrice, clientType } = data || {};
 	return {
 		comment: '',
-		workType: '',
+		workType: null,
 		workPrice: null,
 		completeDate: null,
 		clientType: clientType,
@@ -34,7 +35,10 @@ const getDefaultValues = (data?: ExecutorTaskDto): CompleteTaskRequestModel => {
 
 const useCompleteTaskSchema = () => {
 	const schema = yup.object({
-		workType: yup.string().required(),
+		workType: yup.object().shape({
+			code: yup.string().required(),
+			value: yup.string().required(),
+		}),
 		workPrice: yup
 			.number()
 			.typeError(NOT_A_NUMBER)

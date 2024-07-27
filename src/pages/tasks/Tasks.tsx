@@ -10,7 +10,7 @@ import { AdminTaskPreviewDto, ExecutorTaskPreviewDto } from '@models/tasks';
 import { Box as MuiBox, styled, Typography as MuiTypography } from '@mui/material';
 import useAppSelector from '@store/hooks/useAppSelector';
 import { sortTasks } from '@utils/sorting/sortTasks';
-import TaskRejection from './task-rejection/taskRejection';
+import TaskRejection from './task-rejection/TaskRejection';
 import { isAdminTaskArray } from './typeGuards/adminTypeGuards';
 import getAdminTasksTableColumns from './adminTasksTableColumns';
 import mapExecutorTasksFromDto from './executorTasksMapper';
@@ -37,14 +37,14 @@ const Tasks = ({ userRole }: Props) => {
 	const workTypes = useAppSelector((state) => state.dictionaries.workTypes);
 	const navigateToCard = useNavigateToCard<ExecutorTaskPreviewDto | AdminTaskPreviewDto>('id');
 	const [taskId, setTaskId] = useState('');
-	const [open, setOpen] = useState(false);
+	const [openModalRejection, setOpenModalRejection] = useState(false);
 
 	const openModal = (id: string) => {
 		setTaskId(id);
-		setOpen(true);
+		setOpenModalRejection(true);
 	};
 
-	const closeModal = () => setOpen(false);
+	const closeModal = () => setOpenModalRejection(false);
 
 	const { data, isFetching, refetch, error } = useGetTasksQuery({});
 
@@ -76,7 +76,7 @@ const Tasks = ({ userRole }: Props) => {
 		<Box>
 			<Typography variant="h1">Заявки</Typography>
 			{tasksTable}
-			<Modal width={635} onClose={closeModal} open={open}>
+			<Modal width={635} onClose={closeModal} open={openModalRejection}>
 				<TaskRejection taskId={taskId} onClose={closeModal} />
 			</Modal>
 		</Box>

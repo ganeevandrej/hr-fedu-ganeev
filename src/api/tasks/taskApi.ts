@@ -1,3 +1,4 @@
+import { TagsTasks } from '@api/tags';
 import { TaskDto, TasksMutationRequestModel, TasksPreviewDto, TasksRequestDto } from '@models/tasks';
 import { rtkQueryApi } from '../rtkQueryApi';
 
@@ -9,7 +10,7 @@ const taskApi = rtkQueryApi.injectEndpoints({
 				method: 'GET',
 				params,
 			}),
-			providesTags: ['Task'],
+			providesTags: [TagsTasks.Task],
 		}),
 		getTaskById: build.query<TaskDto, string>({
 			query: (id) => ({
@@ -23,14 +24,14 @@ const taskApi = rtkQueryApi.injectEndpoints({
 				method: 'POST',
 				body: body,
 			}),
-			invalidatesTags: ['Task'],
+			invalidatesTags: [TagsTasks.Task],
 		}),
 		tasksReturn: build.mutation<void, string>({
 			query: (id) => ({
 				url: `/v1/tasks/${id}/return`,
 				method: 'POST',
 			}),
-			invalidatesTags: ['Task'],
+			invalidatesTags: [TagsTasks.Task],
 		}),
 		tasksComplete: build.mutation<void, TasksMutationRequestModel>({
 			query: ({ id, body }) => ({
@@ -38,14 +39,14 @@ const taskApi = rtkQueryApi.injectEndpoints({
 				method: 'POST',
 				body: body,
 			}),
-			invalidatesTags: ['Task'],
+			invalidatesTags: [TagsTasks.Task],
 		}),
 		tasksArchive: build.mutation<void, string>({
 			query: (id) => ({
 				url: `/v1/tasks/${id}/archive`,
 				method: 'POST',
 			}),
-			invalidatesTags: ['Task'],
+			invalidatesTags: [TagsTasks.Task],
 		}),
 		tasksReject: build.mutation<void, TasksMutationRequestModel>({
 			query: ({ id, body }) => ({
@@ -53,7 +54,7 @@ const taskApi = rtkQueryApi.injectEndpoints({
 				method: 'POST',
 				body: body,
 			}),
-			invalidatesTags: ['Task'],
+			invalidatesTags: [TagsTasks.Task],
 		}),
 	}),
 });

@@ -5,9 +5,9 @@ import PageTemplate from '@common/molecules/PageTemplate';
 import { statesSnackbar } from '@harness/context/constants';
 import { useSnackbar } from '@harness/context/snackbar';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
-import { RejectTaskRequestDto } from '@models/tasks';
 import TaskRejectionForm from './TaskRejectionForm';
-import { useRejectionTaskSchema } from './TaskRejectionFormSetting';
+import { RejectTaskRequestModel, useRejectionTaskSchema } from './TaskRejectionFormSetting';
+import { mapToDto } from './taskRejectionMapper';
 
 type Props = {
 	taskId: string;
@@ -21,16 +21,16 @@ const TaskRejection = ({ taskId, onClose }: Props) => {
 
 	const { successRejection, validationError, technicalError } = statesSnackbar;
 
-	const formContext = useForm<RejectTaskRequestDto>({
+	const formContext = useForm<RejectTaskRequestModel>({
 		defaultValues,
 		mode: 'onSubmit',
-		resolver: yupResolver(schema, undefined, { mode: 'async', raw: true }) as Resolver<RejectTaskRequestDto>,
+		resolver: yupResolver(schema, undefined, { mode: 'async', raw: true }) as Resolver<RejectTaskRequestModel>,
 	});
 
-	const handleSubmit = (data: RejectTaskRequestDto) => {
+	const handleSubmit = (data: RejectTaskRequestModel) => {
 		taskReject({
 			id: taskId,
-			body: data,
+			body: mapToDto(data),
 		})
 			.unwrap()
 			.then(() => {

@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { TagsTasks } from './tags';
 
 const baseUrl = `/api`;
 
@@ -17,7 +18,7 @@ const rtkQueryApi = createApi({
 			return headers;
 		},
 	}),
-	tagTypes: ['Task'],
+	tagTypes: [TagsTasks.Task],
 	endpoints: () => ({}),
 });
 

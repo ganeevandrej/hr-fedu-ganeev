@@ -22,12 +22,16 @@ const TaskCompletionForm = () => {
 							name="workType"
 							control={control}
 							render={({ field, fieldState }) => {
+								const value = field.value ? field.value.value : '';
 								return (
 									<SelectInput
 										label="Фактический вид работ"
 										options={workTypes}
-										value={field.value || ''}
-										onChange={field.onChange}
+										value={value}
+										onChange={(e) => {
+											const selectedReason = workTypes.find(({ value }) => value === e.target.value);
+											field.onChange({ code: selectedReason?.code, value: selectedReason?.value });
+										}}
 										error={Boolean(fieldState.error?.message)}
 										helperText={fieldState.error?.message}
 									/>
