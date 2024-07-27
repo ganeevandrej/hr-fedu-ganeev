@@ -6,4 +6,15 @@ type StatisticDto = {
 	color?: string;
 };
 
-export type { StatisticDto };
+type StatisticData = {
+	name: string;
+	value: number;
+	color?: string;
+};
+
+type Statistic = {
+	workers: StatisticData[];
+	tasks: StatisticDto[];
+};
+
+export type { Statistic, StatisticData, StatisticDto };

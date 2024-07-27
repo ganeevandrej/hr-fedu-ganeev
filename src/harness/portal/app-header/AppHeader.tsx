@@ -1,5 +1,5 @@
 import React, { useState, useTransition } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
 	AppBar as MuiAppBar,
 	Avatar as MuiAvatar,
@@ -56,11 +56,17 @@ const Tab = styled(MuiTab)(({ theme }) => ({
 	color: theme.palette.common.white,
 	fontWeight: theme.typography.fontWeightMedium,
 	minHeight: 46,
+	textTransform: 'none',
 }));
 
-const AppHeader = () => {
+type Props = {
+	isAdmin: boolean;
+};
+
+const AppHeader = ({ isAdmin }: Props) => {
+	const { pathname } = useLocation();
 	const [, startTransition] = useTransition();
-	const [tab, setTab] = useState('/tasks');
+	const [tab, setTab] = useState(pathname);
 	const navigate = useNavigate();
 
 	const handleChange = (event: React.SyntheticEvent, nextTab: string) => {
@@ -77,6 +83,7 @@ const AppHeader = () => {
 				<Box>
 					<Tabs value={tab} onChange={handleChange} textColor="primary">
 						<Tab disableRipple label="Заявки" value={'/tasks'} />
+						{isAdmin && <Tab disableRipple label="Статистика" value={'/statistics'} />}
 					</Tabs>
 				</Box>
 				<AppAvatar />
