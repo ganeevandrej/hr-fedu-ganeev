@@ -11,9 +11,6 @@ const rtkQueryApi = createApi({
 		prepareHeaders: (headers) => {
 			headers.set('Accept', 'application/json');
 			headers.set('Content-Type', 'application/json;charset=UTF-8');
-			// указывается значение admin или executor
-			headers.set('x-role', 'admin');
-
 			return headers;
 		},
 	}),

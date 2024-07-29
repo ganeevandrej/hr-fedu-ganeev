@@ -1,8 +1,11 @@
 import React from 'react';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
 	alpha,
 	Box as MuiBox,
 	formHelperTextClasses,
+	IconButton,
 	iconButtonClasses,
 	inputAdornmentClasses,
 	inputBaseClasses,
@@ -74,10 +77,14 @@ interface InputProps extends Omit<TextFieldProps, 'label' | 'disabled' | 'readOn
 	label?: string;
 	disabled?: boolean;
 	readOnly?: boolean;
+	width?: string;
 }
 
-const TextInput = ({ label, readOnly, value, helperText, error, onChange }: InputProps) => {
+const TextInput = ({ label, readOnly, value, type, helperText, width, placeholder, error, onChange }: InputProps) => {
+	const [showPassword, setShowPassword] = React.useState(false);
 	const readOnlyValue = typeof value === 'string' ? value : '--';
+
+	const handleClickShowPassword = () => setShowPassword((show) => !show);
 
 	return (
 		<Box>
@@ -85,7 +92,22 @@ const TextInput = ({ label, readOnly, value, helperText, error, onChange }: Inpu
 			{readOnly ? (
 				<Typography>{readOnlyValue}</Typography>
 			) : (
-				<TextField placeholder="Введите..." value={value} onChange={onChange} helperText={helperText} error={!!error} />
+				<TextField
+					placeholder={placeholder}
+					sx={{ width }}
+					type={type === 'password' && !showPassword ? type : 'text'}
+					value={value}
+					onChange={onChange}
+					helperText={helperText}
+					error={!!error}
+					InputProps={{
+						endAdornment: type === 'password' && (
+							<IconButton onClick={handleClickShowPassword}>
+								{showPassword ? <VisibilityOff /> : <Visibility />}
+							</IconButton>
+						),
+					}}
+				/>
 			)}
 		</Box>
 	);

@@ -33,7 +33,7 @@ const theme = createTheme({
 			main: '#FF0000',
 		},
 		secondary: {
-			main: '#3A9EC9',
+			main: '#A0A5D8',
 		},
 		common: {
 			white: '#FFFFFF',
@@ -44,6 +44,7 @@ const theme = createTheme({
 		},
 		background: {
 			default: '#F1F3F8',
+			paper: '#AC8FD3',
 		},
 		status: {
 			unassigned: '#66BFFF',

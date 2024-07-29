@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import Harness from '@harness/Harness';
 import EmployeeAssignment from '@pages/employee-assignment/EmployeeAssignment';
 import ErrorPage from '@pages/error/ErrorPage';
+import Login from '@pages/login/Login';
 import Tasks from '@pages/tasks/Tasks';
 import TaskCompletion from '@pages/tasks-completion/TaskCompletion';
 import TaskRejected from '@pages/tasks-rejected/TaskRejected';
@@ -21,6 +22,7 @@ const Router = () => {
 				<Route path="/" element={<Navigate to="/tasks" />} />
 				<Route path="*" element={<Navigate to="/tasks" />} key="*" />
 			</Route>
+			<Route path="/login" element={<Login />} />
 		</Routes>
 	);
 };

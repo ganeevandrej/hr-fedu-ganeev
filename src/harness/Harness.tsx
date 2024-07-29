@@ -3,8 +3,7 @@ import { Outlet } from 'react-router';
 import ErrorBoundary from '@business/molecules/ErrorBoundary';
 import AppHeader from '@harness/portal/app-header/AppHeader';
 import { Box, CssBaseline, styled } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from '@styles/theme';
+import { DictionariesProvider } from '@store/slices/dictionaries/DictionariesProvider';
 import SnackbarProvider from './context/snackbar';
 
 const Workspace = styled(Box)(({ theme }) => ({
@@ -16,17 +15,16 @@ const Workspace = styled(Box)(({ theme }) => ({
 
 const Harness = () => {
 	return (
-		<ThemeProvider theme={theme}>
-			<SnackbarProvider>
-				<CssBaseline />
-				<ErrorBoundary>
-					<AppHeader />
-					<Workspace>
-						<Outlet />
-					</Workspace>
-				</ErrorBoundary>
-			</SnackbarProvider>
-		</ThemeProvider>
+		<SnackbarProvider>
+			<CssBaseline />
+			<DictionariesProvider />
+			<ErrorBoundary>
+				<AppHeader />
+				<Workspace>
+					<Outlet />
+				</Workspace>
+			</ErrorBoundary>
+		</SnackbarProvider>
 	);
 };
 

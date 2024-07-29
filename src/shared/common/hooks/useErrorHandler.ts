@@ -8,8 +8,14 @@ const useErrorHandler = (error: Error) => {
 	const navigate = useNavigate();
 
 	if (error) {
-		if ('status' in error && error.status !== 401) {
-			navigate('/error');
+		if ('status' in error) {
+			if (error.status !== 401) {
+				navigate('/error');
+			}
+
+			if (error.status === 401) {
+				navigate('/login');
+			}
 		}
 	}
 };
