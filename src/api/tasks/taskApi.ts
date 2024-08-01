@@ -1,3 +1,4 @@
+import { RTKQueryTags } from '@api/tags';
 import { TaskDto, TasksMutationRequestModel, TasksPreviewDto, TasksRequestDto } from '@models/tasks';
 import { rtkQueryApi } from '../rtkQueryApi';
 
@@ -9,7 +10,7 @@ const taskApi = rtkQueryApi.injectEndpoints({
 				method: 'GET',
 				params,
 			}),
-			providesTags: ['Task'],
+			providesTags: [RTKQueryTags.Task],
 		}),
 		getTaskById: build.query<TaskDto, string>({
 			query: (id) => ({

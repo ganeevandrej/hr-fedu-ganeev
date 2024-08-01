@@ -1,5 +1,5 @@
 import React, { useState, useTransition } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
 	AppBar as MuiAppBar,
 	Avatar as MuiAvatar,
@@ -56,11 +56,26 @@ const Tab = styled(MuiTab)(({ theme }) => ({
 	color: theme.palette.common.white,
 	fontWeight: theme.typography.fontWeightMedium,
 	minHeight: 46,
+	textTransform: 'none',
 }));
 
-const AppHeader = () => {
+const adminTabs = [
+	{ label: 'Заявки', path: '/tasks' },
+	{ label: 'Статистика', path: '/statistics' },
+	{ label: 'Клиенты', path: '/clients' },
+	{ label: 'Виды Работ', path: '/workTypes' },
+];
+
+const executorTabs = [{ label: 'Заявки', path: '/tasks' }];
+
+type Props = {
+	isAdmin: boolean;
+};
+
+const AppHeader = ({ isAdmin }: Props) => {
+	const { pathname } = useLocation();
 	const [, startTransition] = useTransition();
-	const [tab, setTab] = useState('/tasks');
+	const [tab, setTab] = useState(pathname);
 	const navigate = useNavigate();
 
 	const handleChange = (event: React.SyntheticEvent, nextTab: string) => {
@@ -70,6 +85,8 @@ const AppHeader = () => {
 		});
 	};
 
+	const tabs = isAdmin ? adminTabs : executorTabs;
+
 	return (
 		<AppBar>
 			<Toolbar disableGutters variant="dense">
@@ -77,6 +94,9 @@ const AppHeader = () => {
 				<Box>
 					<Tabs value={tab} onChange={handleChange} textColor="primary">
 						<Tab disableRipple label="Заявки" value={'/tasks'} />
+						{tabs.map(({ label, path }) => (
+							<Tab disableRipple key={label} label={label} value={path} />
+						))}
 					</Tabs>
 				</Box>
 				<AppAvatar />

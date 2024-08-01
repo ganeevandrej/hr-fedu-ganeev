@@ -37,10 +37,10 @@ const FormHelperText = styled(MuiFormHelperText)(({ theme }) => ({
 	color: theme.palette.error.main,
 }));
 
-const selectInputStyles = (error?: boolean) => {
+const selectInputStyles = (width: string, error?: boolean) => {
 	return {
 		height: 40,
-		width: '80%',
+		width,
 		'& fieldset': {
 			borderColor: error ? theme.palette.error.main : theme.palette.secondary.main,
 		},
@@ -75,6 +75,7 @@ const selectInputStyles = (error?: boolean) => {
 interface SelectProps {
 	value?: string;
 	label?: string;
+	width?: string;
 	disabled?: boolean;
 	options: Dictionary[];
 	onChange: (event: SelectChangeEvent<unknown>, child: ReactNode) => void;
@@ -82,7 +83,7 @@ interface SelectProps {
 	helperText?: string;
 }
 
-const SelectInput = ({ options, onChange, disabled, label, value, helperText, error }: SelectProps) => {
+const SelectInput = ({ options, onChange, disabled, label, width = '80%', value, helperText, error }: SelectProps) => {
 	return (
 		<Box>
 			<InputLabel>{label}</InputLabel>
@@ -92,7 +93,7 @@ const SelectInput = ({ options, onChange, disabled, label, value, helperText, er
 				onChange={onChange}
 				displayEmpty
 				renderValue={(value) => value || <Typography>Введите...</Typography>}
-				sx={selectInputStyles(error)}
+				sx={selectInputStyles(width, error)}
 				error={error}
 			>
 				{options.map((option) => (

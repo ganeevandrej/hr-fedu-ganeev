@@ -15,7 +15,7 @@ const CardTitle = styled(MuiTypography)(({ theme }) => ({
 }));
 
 interface CardTemplateProps {
-	title: string;
+	title?: string;
 	children: React.ReactNode;
 }
 

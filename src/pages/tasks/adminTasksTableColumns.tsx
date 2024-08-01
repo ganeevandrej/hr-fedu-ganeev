@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import StatusTypography from '@business/atoms/StatusTypography';
 import { Dictionary } from '@models/dictionaries';
 import { AdminTaskPreviewDto, TasksStatuses } from '@models/tasks';
-import { Typography } from '@mui/material';
+import { Link, Typography } from '@mui/material';
 import { ColumnDef, createColumnHelper } from '@tanstack/table-core';
 import { formatDate } from '@utils/date/dateFormatting';
 import { getDictionaryValueByCode } from '@utils/dictionary/dictionaryParsing';
@@ -41,7 +42,12 @@ const getAdminTasksTableColumns = (workTypes: Dictionary[]): AdminTasksColumnsTy
 		}),
 		columnHelper.accessor('workType', {
 			size: 250,
-			header: () => <Typography variant="tableHeader">Вид работ</Typography>,
+			header: () => (
+				// Нету точной статистики по открытию страницы "Виды работ", поэтому добавил данный функционал
+				<Link underline="hover" component={RouterLink} color="inherit" to="/workTypes">
+					Вид работ
+				</Link>
+			),
 			cell: (info) => (
 				<Typography noWrap>{trimString(getDictionaryValueByCode(workTypes, info.getValue()), 35)}</Typography>
 			),

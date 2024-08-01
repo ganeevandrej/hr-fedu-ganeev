@@ -21,6 +21,16 @@ const statesSnackbar: StateSnackbar = {
 		text: 'Заявка отправлена исполнителю',
 		status: 'success',
 	},
+	successAddClient: {
+		title: 'Успешно',
+		text: 'Операция выполнена',
+		status: 'success',
+	},
+	successEditClient: {
+		title: 'Успешно',
+		text: 'Операция выполнена',
+		status: 'success',
+	},
 	validationError: {
 		title: 'Ошибка валидации',
 		text: 'Проверьте корректность введенных значений',

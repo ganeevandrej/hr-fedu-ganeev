@@ -1,5 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
+import { TypeChips } from '@business/molecules/Chips';
+import HeaderTable from '@business/molecules/HeaderTable';
 import DataNotFoundBox from '@common/atoms/DataNotFoundBox';
+import { usePagination } from '@common/hooks/usePagination';
+import TableSkeleton from '@common/molecules/TableSkeleton';
+import { ClientPreviewDto } from '@models/clients';
 import { Box as MuiBox, styled as styledMui, TablePagination } from '@mui/material';
 import { ColumnDef, flexRender, getCoreRowModel, Row, useReactTable } from '@tanstack/react-table';
 import styled from 'styled-components';
@@ -53,30 +58,77 @@ type Props<T, S> = {
 	data: T[];
 	navigateToCard?: (row: Row<T>) => void;
 	refetch: () => void;
+	// пропсы dataChips, deleteChips, deleteChip и openFilters в будущем будут обязательные(выполнение таски с филтрацией)
+	dataChips?: TypeChips;
+	deleteChips?: () => void;
+	deleteChip?: (key: string) => void;
+	openFilters?: () => void;
+	isLoading?: boolean;
+	openActionClient?: (client?: ClientPreviewDto) => void;
 };
 
-const BasicTable = <T, S>({ columns, data, navigateToCard, refetch }: Props<T, S>) => {
-	const [page, setPage] = useState<number>(0);
-	const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-
-	const currentItems = useMemo(
-		() => data.slice(page * rowsPerPage, (page + 1) * rowsPerPage),
-		[data, rowsPerPage, page],
-	);
+const BasicTable = <T, S>({
+	columns,
+	data,
+	navigateToCard,
+	refetch,
+	deleteChips,
+	deleteChip,
+	openFilters,
+	dataChips,
+	openActionClient,
+	isLoading,
+}: Props<T, S>) => {
+	const { page, rowsPerPage, currentItems, handleChangePage, handleChangeRowsPerPage } = usePagination(data);
 
 	const table = useReactTable({ data: currentItems, columns, getCoreRowModel: getCoreRowModel() });
 
-	const handleChangePage = (_event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-		setPage(newPage);
-	};
+	const emptyData =
+		// в будущем от проверки на dataChips && deleteChips планирую избавиться(выполнение таски с фильтрацией)
+		dataChips && deleteChips && dataChips?.length > 0 ? (
+			<DataNotFoundBox
+				onUpdate={() => deleteChips()}
+				textButton="Сбросить филтры"
+				title="Список заявок пуст. Приходите позже"
+			/>
+		) : (
+			<DataNotFoundBox onUpdate={refetch} textButton="Обновить" title="Список заявок пуст. Приходите позже" />
+		);
 
-	const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-		setRowsPerPage(Number(event.target.value));
-		setPage(0);
-	};
+	const bodyTable = !data.length ? (
+		<TableRow style={{ height: '60vh' }}>
+			<TableCell colSpan={6} style={{ padding: '10px 0 0 0' }}>
+				{emptyData}
+			</TableCell>
+		</TableRow>
+	) : (
+		table.getRowModel().rows.map((row) => (
+			<TableRow key={row.id} onDoubleClick={() => navigateToCard && navigateToCard(row)}>
+				{row.getVisibleCells().map((cell) => (
+					<TableCell
+						key={cell.id}
+						style={{
+							width: cell.column.getSize(),
+						}}
+					>
+						{flexRender(cell.column.columnDef.cell, cell.getContext())}
+					</TableCell>
+				))}
+			</TableRow>
+		))
+	);
 
 	return (
 		<Box>
+			{dataChips && ( // проверка на dataChips также уйдет(выполнение таски с фильтрацией)
+				<HeaderTable
+					dataChips={dataChips!}
+					deleteChips={deleteChips!}
+					deleteChip={deleteChip!}
+					openFilters={openFilters!}
+					openActionClient={openActionClient}
+				/>
+			)}
 			<Table>
 				{table.getHeaderGroups().map((headerGroup) => (
 					<thead key={headerGroup.id}>
@@ -89,32 +141,9 @@ const BasicTable = <T, S>({ columns, data, navigateToCard, refetch }: Props<T, S
 						</TableHeaderRow>
 					</thead>
 				))}
-				<tbody>
-					{!data || !data.length ? (
-						<TableRow style={{ height: '60vh' }}>
-							<TableCell colSpan={6} style={{ padding: '10px 0 0 0' }}>
-								<DataNotFoundBox onUpdate={refetch} title="Список заявок пуст. Приходите позже" />
-							</TableCell>
-						</TableRow>
-					) : (
-						table.getRowModel().rows.map((row) => (
-							<TableRow key={row.id} onDoubleClick={() => navigateToCard && navigateToCard(row)}>
-								{row.getVisibleCells().map((cell) => (
-									<TableCell
-										key={cell.id}
-										style={{
-											width: cell.column.getSize(),
-										}}
-									>
-										{flexRender(cell.column.columnDef.cell, cell.getContext())}
-									</TableCell>
-								))}
-							</TableRow>
-						))
-					)}
-				</tbody>
+				<tbody>{isLoading ? <TableSkeleton countItems={rowsPerPage} /> : bodyTable}</tbody>
 			</Table>
-			{data.length && (
+			{data.length > 0 && (
 				<TablePagination
 					component="div"
 					rowsPerPageOptions={[5, 10, 15]}

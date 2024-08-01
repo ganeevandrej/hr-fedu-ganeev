@@ -14,13 +14,17 @@ const Workspace = styled(Box)(({ theme }) => ({
 	height: 'auto',
 }));
 
-const Harness = () => {
+type Props = {
+	isAdmin: boolean;
+};
+
+const Harness = ({ isAdmin }: Props) => {
 	return (
 		<ThemeProvider theme={theme}>
 			<SnackbarProvider>
 				<CssBaseline />
 				<ErrorBoundary>
-					<AppHeader />
+					<AppHeader isAdmin={isAdmin} />
 					<Workspace>
 						<Outlet />
 					</Workspace>
